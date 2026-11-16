@@ -1,6 +1,6 @@
 <system-injection>
-Previous response hit the {{outputTokens}}-token output limit while still reasoning; it was discarded unseen, with every tool call it planned. Re-planning the whole task in reasoning fails the same way.
+Your previous response hit the {{outputTokens}}-token output limit while still reasoning, so it was discarded unseen along with every tool call it planned. Reasoning through the whole task again fails the same way.
 - Reason only about the next step, then call the tool.
-- Large deliverable (file, document, long answer): write a minimal working version now, extend it with further edits over later turns.
+- For a large deliverable (a file, a document, a long answer), write a minimal working version now and extend it with later edits.
 Attempt #{{retryCount}}/{{maxRetries}}
 </system-injection>

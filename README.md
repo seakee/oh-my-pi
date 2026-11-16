@@ -1,3 +1,5 @@
+> **Provider-neutral prompt fork:** this branch contains the source-level prompt rebuild based on OMP `v18.12.6`. See the [fork installation and maintenance guide](docs/provider-neutral-prompts.md) to build this version. The upstream installers and npm package documented below install upstream OMP, **not this fork**. No fork-specific prebuilt release is published here.
+
 <p align="center">
   <img src="https://github.com/can1357/oh-my-pi/blob/main/assets/hero.png?raw=true" alt="omp">
 </p>

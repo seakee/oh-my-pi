@@ -1,18 +1,18 @@
-Update existing handoff summary in <previous-summary> tags from new messages above for another LLM to resume.
+Update the existing handoff summary inside the <previous-summary> tags with the new messages above, so another LLM can resume the task.
 
-MUST:
-- preserve all previous-summary information; add new progress, decisions, context.
-- Progress: move completed "In Progress" items to "Done".
-- update "Next Steps" for completed work.
-- preserve exact file paths, function names, error messages.
-- MAY remove irrelevant content.
-- If new messages end with an unanswered user question/request: add it to Critical Context; replace any previous pending question if answered.
-- output only the structured summary; NEVER extra text.
-- keep sections concise.
-- preserve relevant tool outputs/command results.
-- include mentioned repository state changes (branch, uncommitted changes).
+Requirements:
+- Preserve all information from the previous summary, and add new progress, decisions, and context.
+- Move completed "In Progress" items to "Done".
+- Update "Next Steps" for work that is now complete.
+- Preserve exact file paths, function names, and error messages.
+- Remove content that is no longer relevant.
+- If the new messages end with an unanswered user question or request, add it to Critical Context and replace any previous pending question it answers.
+- Output only the structured summary, with no extra text.
+- Keep the sections concise.
+- Preserve relevant tool outputs and command results.
+- Include repository state changes (branch, uncommitted changes) when they are mentioned.
 
-Format (omit inapplicable sections):
+Format (omit sections that do not apply):
 
 ## Goal
 [Preserve existing goals; add new ones if task expanded]

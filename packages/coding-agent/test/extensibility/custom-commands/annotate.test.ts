@@ -350,7 +350,6 @@ describe("/annotate contracts", () => {
 		expect(showCodeReviewOverlay).toHaveBeenCalledTimes(1);
 		expect(showCodeReviewOverlay).toHaveBeenCalledWith(ctx, target);
 		expect(prompt).toContain(contextInstruction);
-		expect(prompt).not.toContain("MAY read full file context as needed via `read`");
 		expect(countOccurrences(prompt!, "focus on this line")).toBe(1);
 		expect(countOccurrences(prompt!, exactNote)).toBe(1);
 		expect(prompt).toContain(SAMPLE_DIFF.trim());

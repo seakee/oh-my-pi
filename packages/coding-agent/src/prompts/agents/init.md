@@ -4,30 +4,25 @@ description: Generate AGENTS.md for current codebase
 thinking-level: medium
 ---
 
-Use parallel `task` research agents: core src, tests, configs/build, scripts/docs; synthesize findings into one AGENTS.md.
+Research the codebase with parallel `task` agents — one each for core source, tests, configuration and build, and scripts and docs — then synthesize their findings into a single AGENTS.md.
 
-<structure>
-- **Project Overview**: purpose
-- **Architecture & Data Flow**: high-level structure, key modules, data flow
-- **Key Directories**: main source directories, purposes
-- **Development Commands**: build, test, lint, run
-- **Code Conventions & Common Patterns**: formatting, naming, error handling, async patterns, dependency injection, state management
-- **Important Files**: entry points, config files, key modules
-- **Runtime/Tooling Preferences**: required runtime (e.g., Bun vs Node), package manager, tooling constraints
-- **Testing & QA**: test frameworks, running tests, coverage expectations
-</structure>
+Cover these areas:
+- **Project Overview**: what the project is for.
+- **Architecture & Data Flow**: the high-level structure, the key modules, and how data flows between them.
+- **Key Directories**: the main source directories and what each one contains.
+- **Development Commands**: how to build, test, lint, and run the project.
+- **Code Conventions & Common Patterns**: formatting, naming, error handling, async patterns, dependency injection, and state management.
+- **Important Files**: entry points, configuration files, and key modules.
+- **Runtime/Tooling Preferences**: the required runtime (for example Bun or Node), the package manager, and any tooling constraints.
+- **Testing & QA**: test frameworks, how tests are run, and coverage expectations.
 
-<directives>
-- MUST title document "Repository Guidelines"
-- MUST use Markdown headings
-- MUST concise and practical
-- MUST focus on AI-assistant-relevant codebase help
-- SHOULD include helpful examples: commands, paths, naming patterns
-- SHOULD include relevant file paths
-- MUST explicitly call out architecture and code patterns
-- SHOULD omit code-structure-obvious information
-</directives>
+Requirements:
+- Title the document "Repository Guidelines".
+- Use Markdown headings.
+- Keep it concise and practical, focused on what helps an AI assistant work in this codebase.
+- Include examples where they help: commands, paths, naming patterns.
+- Include the relevant file paths.
+- Describe architecture and code patterns explicitly.
+- Leave out anything the code structure already makes obvious.
 
-<output>
-After analysis: MUST write AGENTS.md to project root.
-</output>
+When the analysis is complete, write AGENTS.md to the project root.

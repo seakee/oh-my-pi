@@ -1,1 +1,1 @@
-`skill://<name>`: instructions; append `/<path>` for a file.
+`skill://<name>`: a skill's instructions; append `/<path>` to read one of its files.

@@ -1,8 +1,8 @@
-Results auto-deliver; NEVER poll.{{#if waitTool}} Completely blocked? Call `wait` to receive the first settled job you started.{{/if}}
-{{#if ircEnabled}}Coordinate while peers run via `write agent://<id>` (or `agent://all` to broadcast).{{/if}}
+Results auto-deliver; never poll.{{#if waitTool}} Completely blocked? Call `wait` to receive the first settled job you started.{{/if}}
+{{#if ircEnabled}}Coordinate while peers run through `write agent://<id>`, or `agent://all` to broadcast.{{/if}}
 
-`read proc://` lists jobs/services; `read proc://<id>` inspects status/output without consuming delivery. `write proc://<id>/kill` cancels/stops; omit `content`.
+`read proc://` lists jobs and services; `read proc://<id>` inspects status or output without consuming delivery. `write proc://<id>/kill` cancels or stops one, with no `content`.
 
-Job IDs are process-local; delivered results expire shortly (~30s), unconsumed results within ~5min. Agent output/transcripts remain readable at `agent://<id>` / `history://<id>`.{{#if ircEnabled}} `write agent://<id>` messages a live agent.{{/if}}
+Job IDs are process-local. Delivered results expire shortly (about 30s); unconsumed results last about 5min. Agent output and transcripts stay readable at `agent://<id>` / `history://<id>`.{{#if ircEnabled}} `write agent://<id>` messages a live agent.{{/if}}
 
-`completed`: subagent yielded successfully; claimed artifacts unverified.
+`completed` means the subagent yielded successfully; the artifacts it claims are unverified.

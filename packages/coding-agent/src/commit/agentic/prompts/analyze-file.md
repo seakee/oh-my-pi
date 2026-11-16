@@ -4,19 +4,19 @@ Goal:
 {{#if goal}}
 {{goal}}
 {{else}}
-Summarize purpose and commit-relevant changes.
+Summarize the file's purpose and the commit-relevant changes.
 {{/if}}
 
-Return concise JSON object:
-- summary: 1-sentence file-role description
-- highlights: 2-5 bullets, notable behaviors or changes
-- risks: edge cases or risks worth noting; [] if none
+Return a concise JSON object:
+- summary: a one-sentence description of the file's role.
+- highlights: two to five bullets describing notable behaviors or changes.
+- risks: edge cases or risks worth noting; an empty array if there are none.
 
 {{#if related_files}}
 ## Other Files in This Change
 {{related_files}}
 
-Relate file changes to these files.
+Relate the file's changes to these files.
 {{/if}}
 
-Call yield tool with JSON payload.
+Call the `yield` tool with the JSON payload.

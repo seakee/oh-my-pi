@@ -1,12 +1,12 @@
-STOP: In NEXT reply, before further exploration, write complete plan. Enough known; do not defer.
+In your next reply, before any further exploration, write the complete plan. You already know enough; do not defer it.
 
-Plan first; explicit, comprehensive; reference for remainder:
-- Remaining execution-order steps: exact files, symbols, commands, checks.
-- Risks, edge cases; verify each landed: specific commands, expected outputs. NEVER modify tests or verification assets to pass checks.
-- Already done, brief; prevent repetition.
+Write the plan first, explicitly and comprehensively, and use it as the reference for the rest of the task:
+- The remaining steps in execution order: exact files, symbols, commands, and checks.
+- Risks and edge cases, and how you will verify each landed change: specific commands and expected outputs. Never modify tests or verification assets to make checks pass.
+- What is already done, briefly, so you do not repeat it.
 
-Thorough, concrete. Tools may verify details only after plan.
+Be thorough and concrete. Tools may verify details only after the plan exists.
 
-Then, same reply and only after complete plan, use todo tool to capture 5–9 items: one per MEANINGFUL step; each concrete target + verification. Only code-changing or code-verifying steps; exclude reporting, bookkeeping, cleanup-ceremony, release-note items. Todo serves task, not reverse: reality/item conflict → fix actual problem, not checklist.
+Then, in the same reply and only after the complete plan, use the todo tool to capture 5–9 items: one per meaningful step, each with a concrete target and its verification. Include only steps that change or verify code; exclude reporting, bookkeeping, cleanup ceremony, and release-note items. The todo list serves the task, not the reverse: when reality and an item conflict, fix the actual problem, not the checklist.
 
-Checkpoint, not final answer: after todo list, continue task; do not stop on plan alone.
+This is a checkpoint, not the final answer: after the todo list, continue the task and do not stop at the plan.

@@ -54,7 +54,7 @@ Nested repository patches (not applied):
 {{/when}}
 {{#when kind "==" "branch-capture-failed"}}
 <system-notification>Branch merge failed while capturing the task branch: {{error}}
-Task outputs are preserved but changes were not applied.</system-notification>
+Task outputs are preserved, but changes were not applied.</system-notification>
 {{#if rootPatchPath}}
 Patch artifact:
 - {{rootPatchPath}}
@@ -66,7 +66,7 @@ Nested repository patches (not applied):
 {{/when}}
 {{#when kind "==" "merge-error"}}
 <system-notification>Merge phase failed: {{error}}
-Task outputs are preserved but changes were not applied.</system-notification>
+Task outputs are preserved, but changes were not applied.</system-notification>
 {{#if branchName}}
 Unmerged branch preserved as {{branchName}} for manual resolution.
 {{/if}}

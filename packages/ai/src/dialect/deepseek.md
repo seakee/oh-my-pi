@@ -15,10 +15,10 @@ Results arrive as output tokens:
 ## Rules
 
 - Use `｜` (U+FF5C) and `▁` (U+2581) exactly.
-- Tool name MUST match an available function; arguments are one valid JSON object.
-- Argument string values use only normal JSON string escaping (`\"`, `\\`, `\n`); never HTML-escape their contents — write `a & b`, not `a &amp; b`.
-- NEVER wrap arguments in Markdown fences; NEVER emit a `type` field or `function` prefix.
-- Multiple calls chain `<｜tool▁call▁begin｜>...<｜tool▁call▁end｜>` directly — no separators, spaces, or newlines between them.
-- Private reasoning, when needed, goes in `<think>...</think>` before the tokens.
-- Read each output token in call order. NEVER emit output tokens yourself.
-- Emit the stop sequence ONLY after the call is fully written — NEVER announce a tool then stop (e.g. halting at "Let's run `cargo clippy`" with no `<｜tool▁call▁begin｜>` emitted). Write the complete call, THEN the stop sequence, THEN halt.
+- The tool name must match an available function, and the arguments are one valid JSON object.
+- Argument string values use only normal JSON string escaping (`\"`, `\\`, `\n`). Never HTML-escape their contents: write `a & b`, not `a &amp; b`.
+- Never wrap arguments in Markdown fences, and never emit a `type` field or a `function` prefix.
+- To make multiple calls, chain `<｜tool▁call▁begin｜>...<｜tool▁call▁end｜>` directly, with no separators, spaces, or newlines between them.
+- When private reasoning is needed, put it in `<think>...</think>` before the tokens.
+- Read each output token in call order, and never emit output tokens yourself.
+- Emit the stop sequence only after the call is fully written. Never announce a tool and then stop — do not halt at "Let's run `cargo clippy`" with no `<｜tool▁call▁begin｜>` emitted. Write the complete call, then the stop sequence, then halt.

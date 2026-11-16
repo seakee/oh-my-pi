@@ -2,6 +2,8 @@
 
 How the coding agent assembles its system prompt and what users can control with `SYSTEM_TEMPLATE.md`, `SYSTEM.md`, `APPEND_SYSTEM.md`, `TITLE_SYSTEM.md`, and CLI flags. Programmatic API options are called out where they expose the same routes or full replacement.
 
+This fork rewrites application-owned instruction prose while preserving the assembly and override contracts below. See [provider-neutral prompt maintenance](./provider-neutral-prompts.md) for the pinned baseline, verification evidence, limitations, and update process.
+
 Primary implementation:
 
 - `packages/coding-agent/src/main.ts` (`applyResolvedSystemPromptInputs`)

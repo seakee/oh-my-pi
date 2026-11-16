@@ -3,7 +3,7 @@ Incoming IRC message from agent `{{from}}`{{#if replyTo}} (reply to {{replyTo}})
 
 {{message}}
 
-{{#if interrupting}}Sent while waiting/working. Active interruptible wait stopped early for immediate reading.{{/if}}
+{{#if interrupting}}It arrived while you were waiting or working, and an active interruptible wait stopped early so you could read it now.{{/if}}
 
-{{#if relayOnStop}}If response expected, reply via `write` (`path: "agent://{{from}}"`, `content: "…"`), when available; otherwise what you `yield` or say last this turn is delivered to `{{from}}` when you stop.{{else}}If response expected, reply via `write` (`path: "agent://{{from}}"`, `content: "…"`); may finish current step first. No one replies on your behalf.{{/if}}
+{{#if relayOnStop}}If a response is expected, reply with `write` (`path: "agent://{{from}}"`, `content: "…"`) when it is available; otherwise whatever you `yield` or say last this turn is delivered to `{{from}}` when you stop.{{else}}If a response is expected, reply with `write` (`path: "agent://{{from}}"`, `content: "…"`); you may finish the current step first. No one replies on your behalf.{{/if}}
 </irc>

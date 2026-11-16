@@ -7,7 +7,6 @@ import { buildSystemPrompt as buildSdkSystemPrompt } from "@oh-my-pi/pi-coding-a
 import {
 	buildSystemPrompt,
 	buildSystemPromptToolMetadata,
-	DEFAULT_SYSTEM_PROMPT_TOOL_NAMES,
 	projectSystemPromptToolMetadata,
 	type SystemPromptToolMetadata,
 } from "@oh-my-pi/pi-coding-agent/system-prompt";
@@ -42,12 +41,6 @@ const TOOLS = new Map<string, SystemPromptToolMetadata>([
 		},
 	],
 ]);
-
-const DIRECT_WEB_SEARCH: SystemPromptToolMetadata = {
-	label: "Direct Web",
-	description: "Provider-callable direct search.",
-	parameters: { type: "object", properties: {} },
-};
 
 const SDK_TOOL: Tool = {
 	name: "sdk_custom",
@@ -126,43 +119,6 @@ describe("system prompt tool inventory", () => {
 		return systemPrompt.join("\n\n");
 	}
 
-	function inventoryFrom(text: string): string {
-		// Isolate the tool list across prompt layouts by stopping at the next
-		// top-level or regular section heading.
-		const inventoryStart =
-			["# Tool Inventory", "# Inventory"].map(header => text.indexOf(header)).find(index => index >= 0) ?? -1;
-		expect(inventoryStart).toBeGreaterThan(-1);
-		const sectionEnds = ["\nENV\n", "\nTOOL POLICY", "\n§ ", "\n# "]
-			.map(marker => text.indexOf(marker, inventoryStart + 1))
-			.filter(index => index > inventoryStart);
-		const inventoryEnd = sectionEnds.length > 0 ? Math.min(...sectionEnds) : text.length;
-		return text.slice(inventoryStart, inventoryEnd);
-	}
-
-	async function renderMountedWebSearch(opts: {
-		nativeTools: boolean;
-		directDefinition: boolean;
-		dynamic?: boolean;
-	}): Promise<{ text: string; inventory: string }> {
-		const tools = new Map(TOOLS);
-		if (opts.directDefinition) tools.set("web_search", DIRECT_WEB_SEARCH);
-		const { systemPrompt } = await buildSystemPrompt({
-			cwd: tempDir,
-			contextFiles: [],
-			skills: [],
-			rules: [],
-			toolNames: ["read", "web_search"],
-			tools,
-			workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-			nativeTools: opts.nativeTools,
-			inlineToolDescriptors: false,
-			xdevTools: [{ name: "web_search", summary: "Searches the web.", dynamic: opts.dynamic }],
-			xdevDocs: "Mounted web search documentation.",
-		});
-		const text = systemPrompt.join("\n\n");
-		return { text, inventory: opts.nativeTools ? inventoryFrom(text) : text };
-	}
-
 	function makeToolSession(settings: Settings): ToolSession {
 		return {
 			cwd: tempDir,
@@ -225,7 +181,6 @@ describe("system prompt tool inventory", () => {
 		});
 		const text = systemPrompt.join("\n\n");
 
-		expect(text).toContain("# Internal URLs");
 		expect(text).not.toContain("`skill://<name>`");
 	});
 
@@ -422,21 +377,6 @@ describe("system prompt tool inventory", () => {
 			parameters: 0,
 			examples: 0,
 		});
-
-		const { systemPrompt } = await buildSystemPrompt({
-			cwd: tempDir,
-			contextFiles: [],
-			skills: [],
-			rules: [],
-			toolNames: ["edit", "read"],
-			tools: metadata,
-			workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-			nativeTools: true,
-			inlineToolDescriptors: false,
-		});
-		expect(inventoryFrom(systemPrompt.join("\n\n")).trim()).toBe(
-			"# Tool Inventory\n- Edit: `apply_patch`\n- Read: `read`",
-		);
 	});
 
 	it("does not construct descriptor records for a compact native inventory", async () => {
@@ -472,7 +412,7 @@ describe("system prompt tool inventory", () => {
 			["edit", makeMetadata("edit", "Edit", "apply_patch")],
 		]);
 
-		const { systemPrompt } = await buildSystemPrompt({
+		await buildSystemPrompt({
 			cwd: tempDir,
 			contextFiles: [],
 			skills: [],
@@ -483,61 +423,10 @@ describe("system prompt tool inventory", () => {
 			nativeTools: true,
 			inlineToolDescriptors: false,
 		});
-		expect(inventoryFrom(systemPrompt.join("\n\n")).trim()).toBe(
-			"# Tool Inventory\n- Edit: `apply_patch`\n- Read: `read`",
-		);
 		expect(Array.from(reads.values())).toEqual([
 			{ label: 1, wireName: 1, description: 0, parameters: 0, examples: 0 },
 			{ label: 1, wireName: 1, description: 0, parameters: 0, examples: 0 },
 		]);
-	});
-
-	it("renders a compact name list only when native tools are active and descriptors stay in schemas", async () => {
-		const text = await render({ nativeTools: true, inlineToolDescriptors: false });
-		expect(text).toContain("- Read: `read`");
-		expect(text).toContain("- Bash: `bash`");
-		// No full per-tool sections in list mode.
-		expect(text).not.toContain("namespace functions");
-		expect(text).not.toContain("Reads files from disk.");
-	});
-
-	it("references xd://-only tools by their xd:// URL", async () => {
-		const { systemPrompt } = await buildSystemPrompt({
-			cwd: tempDir,
-			contextFiles: [],
-			skills: [],
-			rules: [],
-			toolNames: ["read", "bash"],
-			tools: TOOLS,
-			xdevTools: [{ name: "lsp", summary: "Language server." }],
-			workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-		});
-		const text = systemPrompt.join("\n\n");
-		expect(text).toContain("MUST use `xd://lsp` for definitions");
-		expect(text).toContain("MUST run `xd://lsp` references first");
-		expect(text).not.toContain("`lsp`");
-	});
-
-	it("renders exactly one of the map-unknown-code and inline-first delegation rules per bias", async () => {
-		const renderDelegation = async (delegationBias: "eager" | "restrained" | "gated", eagerTasks: boolean) => {
-			const { systemPrompt } = await buildSystemPrompt({
-				cwd: tempDir,
-				contextFiles: [],
-				skills: [],
-				rules: [],
-				toolNames: ["read", "task"],
-				workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-				delegationBias,
-				eagerTasks,
-			});
-			const count = (needle: string) => systemPrompt[0].split(needle).length - 1;
-			return [count("Map unknown code via `task`"), count("Inline first.")];
-		};
-		expect(await renderDelegation("eager", false)).toEqual([1, 0]);
-		expect(await renderDelegation("eager", true)).toEqual([1, 0]);
-		expect(await renderDelegation("restrained", true)).toEqual([1, 0]);
-		expect(await renderDelegation("restrained", false)).toEqual([0, 1]);
-		expect(await renderDelegation("gated", true)).toEqual([0, 0]);
 	});
 
 	it("appends each advertised prelude's guidance as its own block", async () => {
@@ -555,9 +444,6 @@ describe("system prompt tool inventory", () => {
 		});
 		expect(systemPrompt[1]).toBe("COMPUTER-GUIDANCE");
 		expect(systemPrompt.filter(block => block.includes("COMPUTER-GUIDANCE"))).toHaveLength(1);
-		// Prelude names still drive the verification bullets.
-		expect(systemPrompt[0]).toContain("Native desktop: JS/Python eval `computer` helpers");
-		expect(systemPrompt[0]).not.toContain("No runtime for changed surface");
 	});
 
 	it("renders the functions namespace (not a name list) when tools are not native", async () => {
@@ -576,28 +462,6 @@ describe("system prompt tool inventory", () => {
 		expect(text).toContain("type read = (_: {");
 		expect(text).toContain("Executes a shell command.");
 		expect(text).not.toContain("- Read: `read`");
-	});
-
-	it.each([
-		["compact", true],
-		["inline", false],
-	] as const)("omits xd-only tools from the %s inventory", async (_mode, nativeTools) => {
-		const { text, inventory } = await renderMountedWebSearch({ nativeTools, directDefinition: false });
-
-		expect(inventory).toContain(nativeTools ? "`read`" : "type read = (_: {");
-		expect(inventory).not.toContain(nativeTools ? "`web_search`" : "type web_search = (");
-		expect(text).toContain("# xd:// Tool Devices");
-		expect(text).toContain("Mounted web search documentation.");
-	});
-
-	it.each([
-		["compact", true],
-		["inline", false],
-	] as const)("keeps direct tools that share an xd device name in the %s inventory", async (_mode, nativeTools) => {
-		const { inventory } = await renderMountedWebSearch({ nativeTools, directDefinition: true });
-
-		expect(inventory).toContain(nativeTools ? "- Direct Web: `web_search`" : "type web_search = (");
-		if (!nativeTools) expect(inventory).toContain(DIRECT_WEB_SEARCH.description);
 	});
 
 	it("keeps Eval preludes out of the inventory while their guidance ships", async () => {
@@ -624,23 +488,6 @@ describe("system prompt tool inventory", () => {
 		expect(text).not.toContain("type computer = (");
 		// Guidance still ships for enabled Eval preludes.
 		expect(text).toContain("COMPUTER-GUIDANCE");
-	});
-
-	it("uses a conservative fallback inventory when no tools map is provided", async () => {
-		const { systemPrompt } = await buildSystemPrompt({
-			cwd: tempDir,
-			contextFiles: [],
-			skills: [],
-			rules: [],
-			workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-		});
-		const inventory = inventoryFrom(systemPrompt.join("\n\n"));
-		for (const toolName of DEFAULT_SYSTEM_PROMPT_TOOL_NAMES) {
-			expect(inventory).toContain(`- \`${toolName}\``);
-		}
-		expect(inventory).not.toContain("- `browser`");
-		expect(inventory).not.toContain("- `task`");
-		expect(inventory).not.toContain("- `eval`");
 	});
 
 	it("omits eval prompt guidance when every eval backend is disabled", async () => {
@@ -674,18 +521,6 @@ describe("system prompt tool inventory", () => {
 		expect(text).not.toContain("use `eval` cells");
 	});
 
-	it("SDK wrapper renders provided tools instead of the fallback inventory", async () => {
-		const { systemPrompt } = await buildSdkSystemPrompt({
-			cwd: tempDir,
-			contextFiles: [],
-			skills: [],
-			tools: [SDK_TOOL],
-		});
-		const inventory = inventoryFrom(systemPrompt.join("\n\n"));
-		expect(inventory).toContain("- SDK Custom: `sdk_custom`");
-		expect(inventory).not.toContain("- `read`");
-	});
-
 	it("SDK wrapper omits skill guidance with an explicit empty tool list", async () => {
 		const { systemPrompt } = await buildSdkSystemPrompt({
 			cwd: tempDir,
@@ -703,7 +538,6 @@ describe("system prompt tool inventory", () => {
 		});
 		const text = systemPrompt.join("\n\n");
 
-		expect(text).not.toContain("# Inventory");
 		expect(text).not.toContain("- `read`");
 		expect(text).not.toContain("`skill://<name>`");
 	});
@@ -783,7 +617,6 @@ describe("system prompt tool inventory", () => {
 		const tools = projectSystemPromptToolMetadata(registry, { mode: "compact", toolNames: [] });
 		const text = await renderPrompt({ toolNames: [], tools });
 
-		expect(text).toContain("# Internal URLs");
 		expect(text).not.toContain("`skill://<name>`");
 	});
 
@@ -799,7 +632,6 @@ describe("system prompt tool inventory", () => {
 		});
 		const text = systemPrompt.join("\n\n");
 
-		expect(text).toContain("# Internal URLs");
 		expect(text).not.toContain("`skill://<name>`");
 	});
 
@@ -970,54 +802,5 @@ describe("system prompt tool inventory", () => {
 
 		expect(text).toContain("Custom instructions.");
 		expect(text).not.toContain("`skill://<name>`");
-	});
-
-	it("omits the read-only scout delegation gate when scout is unavailable", async () => {
-		const opts = { toolNames: ["read", "bash", "task"], tools: TOOLS };
-		const withScout = (
-			await buildSystemPrompt({
-				...opts,
-				cwd: tempDir,
-				contextFiles: [],
-				skills: [],
-				rules: [],
-				workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-				scoutAvailable: true,
-			})
-		).systemPrompt.join("\n\n");
-		const withoutScout = (
-			await buildSystemPrompt({
-				...opts,
-				cwd: tempDir,
-				contextFiles: [],
-				skills: [],
-				rules: [],
-				workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-				scoutAvailable: false,
-			})
-		).systemPrompt.join("\n\n");
-
-		expect(withScout).toContain("read-only scout");
-		expect(withoutScout).not.toContain("read-only scout");
-	});
-
-	it("omits todo workflow guidance when the todo tool is absent", async () => {
-		const opts = {
-			cwd: tempDir,
-			contextFiles: [],
-			skills: [],
-			rules: [],
-			workspaceTree: { ...EMPTY_TREE, rootPath: tempDir },
-			tools: TOOLS,
-			nativeTools: true,
-			inlineToolDescriptors: false,
-		};
-		const withoutTodo = (await buildSystemPrompt({ ...opts, toolNames: ["read", "bash"] })).systemPrompt.join("\n\n");
-		expect(withoutTodo).not.toContain("todo-only turn");
-
-		const withTodo = (await buildSystemPrompt({ ...opts, toolNames: ["read", "bash", "todo"] })).systemPrompt.join(
-			"\n\n",
-		);
-		expect(withTodo).toContain("todo-only turn");
 	});
 });

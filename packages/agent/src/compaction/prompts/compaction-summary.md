@@ -1,8 +1,8 @@
-You MUST summarize the conversation above into a structured handoff summary for another LLM to resume the task.
+Summarize the conversation above into a structured handoff summary that another LLM can use to resume the task.
 
-IMPORTANT: If the conversation ends with an unanswered question or a request awaiting user response (e.g., "Please run command and paste output"), you MUST preserve that exact question/request.
+If the conversation ends with an unanswered question or a request awaiting a user response (for example, "Please run command and paste output"), preserve that exact question or request.
 
-You MUST use this format (sections can be omitted if not applicable):
+Use this format, omitting sections that do not apply:
 
 ## Goal
 [User goals; list multiple if session covers different tasks.]
@@ -33,6 +33,6 @@ You MUST use this format (sections can be omitted if not applicable):
 ## Additional Notes
 [Anything else important not covered above]
 
-You MUST output only the structured summary; you NEVER include extra text.
+Output only the structured summary, with no extra text.
 
-Sections MUST be kept concise. You MUST preserve exact file paths, function names, error messages, and relevant tool outputs or command results. You MUST include repository state changes (branch, uncommitted changes) if mentioned.
+Keep each section concise, and preserve exact file paths, function names, error messages, and the relevant tool outputs or command results. Include repository state changes (branch, uncommitted changes) when the conversation mentions them.

@@ -1,5 +1,5 @@
-Regex: Rust, then PCRE2. `path`: `;`-separated file/dir/glob/URL; default `.`. Default case-sensitive, gitignore respected; `skip` paginates files.
-File-only selector: `src/foo.ts:50-100`. Literal `\n`/`\\n` enables cross-line.
-Bare glob `*.ts` matches any depth; `dir/*.ts` only `dir`'s direct children (`dir/**/*.ts` recurses).
-{{#if hasFind}}Behavior/unknown symbol → `find`; literals/regex → `grep`.{{/if}}
-{{#if eagerDelegation}}Multi-round search MUST use {{#if scoutAvailable}}Task + scout{{else}}Task{{/if}}, not chained calls.{{/if}}
+Regex search: Rust first, then PCRE2. `path` takes `;`-separated files, directories, globs, or URLs and defaults to `.`. Matching is case-sensitive and respects gitignore by default; `skip` pages through files.
+A file-only selector looks like `src/foo.ts:50-100`. A literal `\n` or `\\n` enables cross-line matching.
+A bare glob `*.ts` matches at any depth; `dir/*.ts` matches only `dir`'s direct children (`dir/**/*.ts` recurses).
+{{#if hasFind}}For behavior or an unknown symbol start with `find`; use `grep` for literals and regexes.{{/if}}
+{{#if eagerDelegation}}A multi-round search must go to a {{#if scoutAvailable}}Task with `scout`{{else}}Task{{/if}} rather than a chain of calls.{{/if}}

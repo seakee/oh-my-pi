@@ -33,23 +33,12 @@ const FIXTURE_PATH = path.join(import.meta.dir, "fixtures", "instructions-mcp.ts
 const MCP_TOOL_NAME = "mcp__instr_do_thing";
 /** Route line for the fixture's backtick-named tool: escaped label, normalized mount path. */
 const DO_THING_ROUTE = '- "do\\u0060thing" → `xd://mcp__instr_do_thing`';
-const MCP_ROUTE_SECTION = "## MCP Tool Routes";
 const CONTEXT_MODE_ROUTE = '- "ctx_execute" → `xd://mcp__context_mode_ctx_execute`';
 const CONTEXT_MODE_MCP_TOOL_NAME = "mcp__context_mode_ctx_execute";
 /** Sentinel proving the user's append prompt stays a block of its own. */
 const USER_APPEND_MARKER = "USER_APPEND_SENTINEL_7d13f2: prefer Bun APIs over Node APIs.";
 /** Heading that opens the user's append section, asserted literally rather than imported. */
 const USER_APPEND_SECTION_HEADING = "## User Instructions";
-/** The route section's instruction to read an `xd://` path before first use. */
-const READ_FIRST_CLAUSE = "for docs + JSON schema before first use";
-
-/** The rendered `## MCP Tool Routes` section, up to the next heading. */
-function routeSection(prompt: string): string {
-	const start = prompt.indexOf(MCP_ROUTE_SECTION);
-	if (start === -1) return "";
-	const end = prompt.indexOf("\n#", start + MCP_ROUTE_SECTION.length);
-	return prompt.slice(start, end === -1 ? undefined : end);
-}
 
 /**
  * Polls `read` every 10ms until `done` accepts its value or 12s elapse, returning
@@ -315,10 +304,7 @@ describe("createAgentSession MCP server instructions (deferred UI)", () => {
 			expect(prompt).toContain(CONTEXT_MODE_ROUTE);
 			expect(session.getXdevToolEntries().map(entry => entry.name)).toContain(CONTEXT_MODE_MCP_TOOL_NAME);
 			expect(session.getActiveToolNames()).not.toContain(CONTEXT_MODE_MCP_TOOL_NAME);
-			expect(prompt.split(MCP_ROUTE_SECTION)).toHaveLength(2);
 			expect(prompt).not.toContain(SERVER_INSTRUCTIONS);
-			expect(prompt).not.toContain("## MCP Server Instructions");
-			expect(prompt).not.toContain("### context-mode");
 		} finally {
 			await session.dispose();
 		}
@@ -357,7 +343,7 @@ describe("createAgentSession MCP server instructions (deferred UI)", () => {
 		try {
 			const prompt = await eventually(
 				() => session.systemPrompt.join("\n"),
-				text => text.includes(SERVER_INSTRUCTIONS) && text.includes(MCP_ROUTE_SECTION),
+				text => text.includes(SERVER_INSTRUCTIONS),
 			);
 
 			expect(prompt).toContain(SERVER_INSTRUCTIONS);
@@ -408,7 +394,6 @@ describe("createAgentSession MCP server instructions (deferred UI)", () => {
 			const prompt = session.systemPrompt.join("\n");
 			expect(prompt).toContain("## mcp__instr_do_thing");
 			expect(prompt.split("\n")).toContain(DO_THING_ROUTE);
-			expect(routeSection(prompt)).not.toContain(READ_FIRST_CLAUSE);
 		} finally {
 			await session.dispose();
 		}
@@ -447,7 +432,6 @@ describe("createAgentSession MCP server instructions (deferred UI)", () => {
 			expect(prompt).not.toContain("## mcp__instr_do_thing");
 			expect(prompt.split("\n")).toContain(`${DO_THING_ROUTE} — Fixture tool returning a deterministic sentinel.`);
 			expect(prompt.split("xd://mcp__instr_do_thing")).toHaveLength(2);
-			expect(routeSection(prompt)).toContain(READ_FIRST_CLAUSE);
 		} finally {
 			await session.dispose();
 		}

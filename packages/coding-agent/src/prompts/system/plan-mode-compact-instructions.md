@@ -1,17 +1,17 @@
-Prepare to execute approved plan.
+Prepare to execute the approved plan.
 
-MUST distill plan-mode discussion.
+Distil the plan-mode discussion.
 Preserve:
-- Plan rationale; explicitly rejected alternatives.
-- Key decisions; driving constraints.
-- Discovered files, symbols, code paths executor needs.
+- The plan rationale and the alternatives you explicitly rejected.
+- Key decisions and the constraints that drove them.
+- Discovered files, symbols, and code paths the executor needs.
 - User preferences expressed during planning.
 
 Drop:
-- Tool-call noise (file reads, searches) if result captured in plan or plan-mode discussion.
+- Tool-call noise (file reads, searches) whose result is captured in the plan or the plan-mode discussion.
 - Superseded plan drafts.
-- Context restated in plan file.
+- Context the plan file already restates.
 
 {{#if planFilePath}}
-Approved plan file: `{{planFilePath}}`; authoritative source of truth. MUST preserve this durable path; the plan body is re-inlined for the executor after compaction, so NEVER restate it in the summary.
+Approved plan file: `{{planFilePath}}`, the authoritative source of truth. Preserve this durable path; the plan body is re-inlined for the executor after compaction, so never restate it in the summary.
 {{/if}}

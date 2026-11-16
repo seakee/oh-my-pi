@@ -1,25 +1,17 @@
 Plan approved.
 {{#if contextPreserved}}
-- History usable; the plan below authoritative if it conflicts with earlier exploration.
+- The history is still usable; where it conflicts with the plan below, the plan wins.
 {{/if}}
 
-<instruction>
-Full plan inlined below; durable copy at `{{planFilePath}}` (identical content).
-Execute plan step-by-step with full tool access; MUST verify each step before next.
-NEVER re-read `{{planFilePath}}` while the inline plan is intact; the path is for subagent handoff and recovery only.
+The full plan is inlined below, with a durable copy at `{{planFilePath}}` (identical content). Execute the plan step by step with full tool access, and verify each step before moving to the next. Do not re-read `{{planFilePath}}` while the inline plan is intact; the path is for subagent handoff and recovery only.
 {{#has tools "todo"}}
-Before execution: initialize todo tracking with `todo`.
-After each completed step: immediately update `todo`.
-If `todo` fails: fix payload; retry before continuing.
+Before execution, initialize todo tracking with `todo`.
+After each completed step, update `todo` immediately.
+If `todo` fails, fix the payload and retry before continuing.
 {{/has}}
-</instruction>
 
 <plan path="{{planFilePath}}">
 {{planContent}}
 </plan>
 
-<critical>
-Inline plan compressed, expired, or unrecoverable: NEVER stop; read `{{planFilePath}}`.
-Read failure: report exact path and error; NEVER guess.
-MUST continue until complete.
-</critical>
+If the inline plan is compressed, expired, or unrecoverable, do not stop: read `{{planFilePath}}`. If that read fails, report the exact path and error; never guess. Keep working until the plan is complete.

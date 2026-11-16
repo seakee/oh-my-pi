@@ -211,7 +211,6 @@ describe("ReviewCommand", () => {
 			const promptText = result!;
 			expect(promptText).toContain("src/workspace.ts");
 			expect(promptText).toContain("+1/-1");
-			expect(promptText).toContain("MAY read full file context as needed via `read`");
 			expect(jjDiffSpy).toHaveBeenCalledWith([]);
 			expect(gitRepoSpy).not.toHaveBeenCalled();
 		} finally {

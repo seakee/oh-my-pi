@@ -1,3 +1,3 @@
 <system-notice>
-Multi-step reasoning: think carefully through the problem before responding.
+This task calls for multi-step reasoning: think the problem through carefully before responding.
 </system-notice>

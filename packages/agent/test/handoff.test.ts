@@ -84,8 +84,6 @@ describe("handoff summary injection", () => {
 	test("handoff-method summary is framed as the successor's own prior handoff", () => {
 		const text = convertedText("handoff");
 		expect(text).toContain("<handoff>");
-		expect(text).toContain("prior instance");
-		expect(text).toContain("NEVER write another handoff document");
 		expect(text).toContain(document);
 		expect(text).not.toContain("<summary>");
 	});

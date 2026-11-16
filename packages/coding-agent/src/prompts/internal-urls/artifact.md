@@ -1,1 +1,1 @@
-`artifact://<id>`: spilled output; page :N-M or :raw:N-M.
+`artifact://<id>`: output that spilled out of a response; page it with `:N-M` or `:raw:N-M`.

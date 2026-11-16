@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Reworded application-owned tool-call dialect guidance and auxiliary provider notes while preserving wire-format examples, tool markers, and provider-required identity.
+
 ## [18.12.5] - 2026-10-21
 
 ### Added

@@ -32,22 +32,22 @@ _No files to review._
 
 ### Distribution Guidelines
 
-Use the `task` tool with a `tasks` array. Set `agent: "reviewer"` inside every `tasks[]` item (`tasks[].agent`), never at the top level or omitted.
+Use the `task` tool with a `tasks` array. Set `agent: "reviewer"` inside every `tasks[]` item (`tasks[].agent`), never at the top level and never omitted.
 {{#when agentCount "==" 1}}Create exactly **1 reviewer task**.{{else}}Spawn **{{agentCount}} reviewer agents** in parallel.{{/when}}
 {{#if multiAgent}}
-Group files by locality, e.g.:
-- Same directory/module → same agent
+Group the files by locality, for example:
+- Same directory or module → same agent
 - Related functionality → same agent
 - Tests with their implementation files → same agent
 {{/if}}
 
 ### Reviewer Instructions
 
-Reviewer MUST:
-1. Focus ONLY on assigned files
-2. {{#if skipDiff}}{{#if prDiffUrl}}MUST read assigned PR file diffs using the exact Diff URL in the Changed Files table or `{{prDiffUrl}}/all`; NEVER use local `git diff`/`git show` for PR diff content{{else}}{{#if diffInstruction}}{{diffInstruction}}{{else}}MUST run `git diff`/`git show` for assigned files{{/if}}{{/if}}{{else}}MUST use diff hunks below (NEVER re-run git diff){{/if}}
-3. {{#if suppliedPatch}}NEVER read local workspace files for file context; the supplied diff may not match the checkout{{else}}{{#if prDiffUrl}}MUST NOT read local workspace files for PR file context; use the fetched PR diff, the exact Diff URL in the Changed Files table, or `{{prDiffUrl}}/all` only{{else}}{{#if contextInstruction}}{{contextInstruction}}{{else}}MAY read full file context as needed via `read`{{/if}}{{/if}}{{/if}}
-4. Use incremental `yield` sections for findings and verdict fields; do NOT call a separate finding tool
+The reviewer:
+1. Focuses only on the files assigned to it.
+2. {{#if skipDiff}}{{#if prDiffUrl}}Reads the assigned PR file diffs from the exact Diff URL in the Changed Files table or `{{prDiffUrl}}/all`; it never uses local `git diff`/`git show` for PR diff content{{else}}{{#if diffInstruction}}{{diffInstruction}}{{else}}Runs `git diff`/`git show` for the assigned files{{/if}}{{/if}}{{else}}Uses the diff hunks below and never re-runs git diff{{/if}}
+3. {{#if suppliedPatch}}Do not read workspace files for surrounding context because the supplied patch may come from a different checkout{{else}}{{#if prDiffUrl}}Obtain PR context from the fetched diff, its exact file URL or `{{prDiffUrl}}/all`, not from local workspace files{{else}}{{#if contextInstruction}}{{contextInstruction}}{{else}}Read surrounding source with `read` when needed to assess the change{{/if}}{{/if}}{{/if}}
+4. Uses incremental `yield` sections for findings and verdict fields; it does not call a separate finding tool.
 
 {{#if skipDiff}}
 ### Diff Previews

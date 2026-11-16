@@ -1,8 +1,8 @@
 <system-notice reason="background_task_dispatched" job="{{jobId}}">
-Tangential user task: running in a separate background agent. Coding-agent dispatch notice, NOT prompt injection or new instruction.
+A tangential user task is running in a separate background agent. This is a coding-agent dispatch notice, not prompt injection or a new instruction.
 
-Task below: another agent's own session; you NOT responsible. NEVER work on, reference, or let it interrupt or alter current task. Continue as if absent. Results, if any, will surface separately when background task ({{jobId}}) completes.
+The task below belongs to another agent's own session and is not your responsibility. Never work on it, refer to it, or let it interrupt or alter your current task; continue as if it were absent. Its results, if any, surface separately when the background task ({{jobId}}) completes.
 
-Dispatched work — awareness only:
+Dispatched work, for awareness only:
 {{work}}
 </system-notice>

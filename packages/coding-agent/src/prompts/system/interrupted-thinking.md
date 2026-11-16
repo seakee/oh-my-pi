@@ -1,4 +1,4 @@
-You were saying this but I interrupted you:
+You were saying this when I interrupted you:
 ```
 {{reasoning}}
 ```

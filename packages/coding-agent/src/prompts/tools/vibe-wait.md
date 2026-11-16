@@ -1,8 +1,8 @@
-Blocks until ONE watched session finishes its current turn, the timeout elapses, or you are interrupted — not until all finish. Re-issue to keep waiting.
+Block until one watched session finishes its current turn, the timeout elapses, or you are interrupted, whichever comes first. It does not wait for all of them, so re-issue it to keep waiting.
 
-Turn results normally deliver themselves; you NEVER need this to receive output. Use it only when you are completely blocked and cannot direct any other session.
+Turn results normally deliver themselves, so you never need this to receive output. Use it only when you are completely blocked and cannot direct another session.
 
-- `sessions` — ids to watch. Omit to watch every session with a turn in flight.
+- `sessions` — the ids to watch. Omit it to watch every session with a turn in flight.
 - `timeout` — seconds to wait (default 30).
 
-A finished turn's full result (activity trace + response) is returned here and will not be re-delivered separately.
+The full result of a finished turn (activity trace plus response) is returned here and is not re-delivered separately.

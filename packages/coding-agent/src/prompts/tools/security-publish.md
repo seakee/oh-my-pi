@@ -1,5 +1,5 @@
-Publish current OMP-native security scan's canonical result.
-Call exactly once after every in-scope file and candidate reaches final disposition.
-Evidence: only repository files inspected during this scan.
-Tool: validates, fingerprints, assigns OMP-owned IDs, writes canonical security store, creates SARIF.
-NEVER invent IDs or edit store directly.
+Publish the canonical result of the current security scan.
+Call it exactly once, after every in-scope file and candidate has reached its final disposition.
+Evidence: only the repository files inspected during this scan.
+The tool validates, fingerprints, assigns its own IDs, writes the canonical security store, and creates SARIF.
+Never invent IDs or edit the store directly.

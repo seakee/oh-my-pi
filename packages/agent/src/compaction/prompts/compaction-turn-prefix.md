@@ -1,6 +1,6 @@
-Turn prefix too large; recent-work suffix retained.
+Turn prefix too large; the recent-work suffix was retained.
 
-MUST summarize prefix for retained suffix:
+Summarize the prefix for the retained suffix:
 
 ## Original Request
 
@@ -12,6 +12,6 @@ MUST summarize prefix for retained suffix:
 ## Context for Suffix
 - [Information needed to understand the retained recent work]
 
-MUST output only the structured summary; NEVER extra text.
+Output only the structured summary, with no extra text.
 
-MUST concise. MUST preserve exact file paths, function names, error messages, relevant tool outputs, and command results if present. MUST focus on information needed to understand the retained suffix.
+Keep it concise, preserve exact file paths, function names, error messages, and any relevant tool outputs or command results, and focus on what is needed to understand the retained suffix.

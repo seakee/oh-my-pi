@@ -1,1 +1,1 @@
-`ssh://host/<path>`: remote UTF-8 file/dir (max 1 MiB) for read/write/grep; bare lists hosts. Encode `:` `?` `#` as %3A %3F %23. Needs verified POSIX shell; else bash remote SSH or sshfs.
+`ssh://host/<path>`: a remote UTF-8 file or directory (up to 1 MiB) for reading, writing, and grep; bare `ssh://` lists hosts. Encode `:`, `?`, and `#` as %3A, %3F, and %23. It needs a verified POSIX shell; otherwise use `bash` with remote SSH or sshfs.

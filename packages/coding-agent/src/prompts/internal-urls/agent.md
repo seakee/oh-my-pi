@@ -1,1 +1,1 @@
-`agent://<id>`: latest completed output (status + progress while unpublished); nested IDs dotted, `/key/index` JSON path; write = message, `agent://all` broadcast only.
+`agent://<id>`: the latest completed output, or status plus progress while it is unpublished. Nested IDs are dotted, and `/key/index` selects a JSON path. Writing to the URL sends a message to that agent, and `agent://all` only broadcasts.

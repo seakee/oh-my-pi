@@ -1256,7 +1256,6 @@ describe("compact", () => {
 		);
 		const archive = snapcompact.getPreservedArchive(result.preserveData);
 		expect(archive?.text).toContain("Legacy beginning summary");
-		expect(result.summary).toContain("condensed digest of still-older context");
 	});
 
 	it("strips the OpenAI remote payload and preserves unrelated preserveData", async () => {

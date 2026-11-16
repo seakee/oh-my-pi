@@ -1,2 +1,2 @@
-Durable fact—not procedure—(project convention, non-obvious fix, user preference): record with `learn` → long-term memory.
-Fact and procedure: same `learn` call MAY mint or enhance a managed skill.
+For a durable fact rather than a procedure (a project convention, a non-obvious fix, a user preference), record it with `learn` into long-term memory.
+When something is both a fact and a procedure, the same `learn` call may also mint or enhance a managed skill.

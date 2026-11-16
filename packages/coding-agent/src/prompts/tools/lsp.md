@@ -1,23 +1,22 @@
-Symbol-aware code intelligence from language servers — navigation, refactors, and diagnostics where text tools miss callsites.
+Symbol-aware code intelligence from language servers: navigation, refactors, and diagnostics where text tools miss callsites.
 
-<operations>
-- Position-based: `file` + `line` + `symbol` (substring; `#N` for Nth match). `line` is 1-indexed.
-- `rename` — applies by default; `apply: false` previews. Project-aware lookups ERROR without `symbol` — no silent fallback on missing/ambiguous matches.
-- `code_actions` — lists by default; apply ONE with `apply: true` + `query` (title substring or index).
-- `rename_file` — moves file AND rewrites all imports/references; applies by default.
-- `diagnostics` — path, glob (`src/**/*.ts`), or `file: "*"` for workspace.
-- `symbols` — `file` lists file symbols; `file: "*"` + `query` searches workspace.
-- `reload` — restart one server (`file`) or all (`*`); `reload *` re-reads LSP config.
-- `request` — raw: `query` = method, `payload` = JSON params (else auto-built).
-</operations>
+## Operations
 
-<timeout>
-Default: whole call {{defaultTimeoutSec}}s; project-aware diagnostics wait {{defaultWaitSec}}s. `timeout` sets both for this call — raise it for a server still indexing or cold-starting, lower it to fail fast. Capped at {{maxTimeoutSec}}s.
-</timeout>
+- Position-based: `file` + `line` + `symbol` (a substring, with `#N` for the Nth match). `line` is 1-indexed.
+- `rename` applies by default; `apply: false` previews. Project-aware lookups error without `symbol` rather than falling back silently on missing or ambiguous matches.
+- `code_actions` lists by default; apply one with `apply: true` and `query` (a title substring or an index).
+- `rename_file` moves the file and rewrites every import and reference; it applies by default.
+- `diagnostics` takes a path, a glob (`src/**/*.ts`), or `file: "*"` for the workspace.
+- `symbols`: `file` lists that file's symbols; `file: "*"` with `query` searches the workspace.
+- `reload` restarts one server (`file`) or all of them (`*`); `reload *` re-reads the LSP config.
+- `request` sends a raw request: `query` is the method and `payload` the JSON params (otherwise they are built automatically).
 
-<critical>
-- Symbol-aware work (rename, references, definition, code actions) MUST use `lsp` whenever a server is available.
-  It follows shadowing, re-exports, and cross-file usages text tools miss.
-- NEVER do a cross-file rename with `ast_edit`/`sed`/hand edits when `lsp` `rename`/`rename_file` can — text renames silently drop callsites.
-- Reach for `code_actions` on imports, quick-fixes, and server-known refactors before editing by hand.
-</critical>
+## Timeout
+
+The whole call defaults to {{defaultTimeoutSec}}s, and project-aware diagnostics wait {{defaultWaitSec}}s. `timeout` sets both for this call: raise it for a server that is still indexing or cold-starting, lower it to fail fast. It is capped at {{maxTimeoutSec}}s.
+
+## Rules
+
+- Symbol-aware work (rename, references, definition, code actions) must use `lsp` whenever a server is available, because it follows shadowing, re-exports, and cross-file usages that text tools miss.
+- Never do a cross-file rename with `ast_edit`, `sed`, or hand edits when `lsp` `rename`/`rename_file` can: text renames silently drop callsites.
+- Reach for `code_actions` on imports, quick fixes, and server-known refactors before editing by hand.

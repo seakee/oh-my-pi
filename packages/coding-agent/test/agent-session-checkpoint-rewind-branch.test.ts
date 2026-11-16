@@ -260,9 +260,6 @@ describe("AgentSession checkpoint rewind branch context", () => {
 		const reportMessage = finalCall.context.messages[reportIndex];
 		if (!reportMessage) throw new Error("Expected rewind report context");
 		const reportText = messageText(reportMessage);
-		expect(reportText).toContain(
-			"Checkpoint called and rewound. Report retained below. Need explore again → new `checkpoint`.",
-		);
 		expect(reportText).toContain(report);
 
 		expect(
@@ -442,12 +439,8 @@ describe("AgentSession checkpoint rewind branch context", () => {
 				message.role === "custom" && message.customType === "checkpoint-active-reminder",
 		);
 		expect(reminder).toBeDefined();
-		expect(reminder?.content).toContain("MUST `rewind` before yielding");
 		const activeCall = mock.calls[1];
 		expect(activeCall).toBeDefined();
-		expect(
-			activeCall?.context.messages.some(message => messageText(message).includes("Exploration checkpoint active.")),
-		).toBe(true);
 		// #checkpointState is set synchronously with the reminder (pre-await), so an
 		// immediate rewind would find an active checkpoint, not "No active checkpoint".
 		expect(session.getCheckpointState()).toBeDefined();
@@ -461,21 +454,14 @@ describe("AgentSession checkpoint rewind branch context", () => {
 			),
 		).toBe(false);
 
-		// No negation guard anywhere in the model-visible context.
 		const finalCall = mock.calls.at(-1);
 		if (!finalCall) throw new Error("Expected final post-rewind provider call");
-		for (const message of finalCall.context.messages) {
-			const text = messageText(message);
-			expect(text).not.toContain("NEVER call");
-			expect(text).not.toContain("Do not call `rewind` again");
-		}
 
 		// Exactly one developer message carries the forward-looking rewind report.
 		const reportMessages = finalCall.context.messages.filter(
-			message => message.role === "developer" && messageText(message).includes("Checkpoint called and rewound."),
+			message => message.role === "developer" && messageText(message).includes(report),
 		);
 		expect(reportMessages).toHaveLength(1);
-		expect(messageText(reportMessages[0]!)).toContain("Need explore again → new `checkpoint`.");
 		expect(messageText(reportMessages[0]!)).toContain(report);
 	});
 

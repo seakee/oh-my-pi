@@ -1,20 +1,13 @@
-<critical>
-Write a handoff document for another instance of yourself.
-The handoff MUST be sufficient for seamless continuation without access to this conversation.
-Output ONLY the handoff document. No preamble, no commentary, no wrapper text.
-</critical>
+Write a handoff document for another instance of yourself. The handoff must be sufficient for seamless continuation without access to this conversation. Output only the handoff document: no preamble, no commentary, no wrapper text.
 
-<instruction>
-Capture exact technical state, not abstractions.
-- File paths, symbol names, commands run
-- Test results, observed failures
-- Decisions made
-- Partial work affecting the next step
-Register: address the successor directly in the imperative ("Fix X", "Run Y") — never first person ("I need to…", "my attempt…").
-The handoff mechanism is invisible to the document: NEVER list writing, generating, or delivering a handoff/summary/context document as progress or a next step. Progress and Next Steps cover the user's task only.
-</instruction>
+Capture exact technical state rather than abstractions:
+- File paths, symbol names, and the commands that were run.
+- Test results and observed failures.
+- Decisions that were made.
+- Partial work that affects the next step.
 
-<output>
+Address the successor directly in the imperative ("Fix X", "Run Y"), never in the first person ("I need to", "my attempt"). The handoff mechanism is invisible to the document: never list writing, generating, or delivering a handoff, summary, or context document as progress or as a next step. Progress and Next Steps cover the user's task only.
+
 Use exactly this structure:
 
 ## Goal
@@ -42,10 +35,7 @@ Use exactly this structure:
 
 ## Next Steps
 1. [What should happen next]
-</output>
 
 {{#if additionalFocus}}
-<instruction>
 Additional focus: {{additionalFocus}}
-</instruction>
 {{/if}}

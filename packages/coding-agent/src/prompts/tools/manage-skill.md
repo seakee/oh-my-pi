@@ -1,12 +1,11 @@
-Managed skill: `SKILL.md` in isolated `~/.omp/agent/managed-skills`; surfaced as a normal skill in future sessions.
+A managed skill is a `SKILL.md` in the isolated `~/.omp/agent/managed-skills` directory, surfaced as a normal skill in future sessions.
 
-Use: repeatable procedures worth codifying — setup sequence, debugging recipe, project-specific workflow.
-User-authored skills separate; tool NEVER edits them.
+Use it for repeatable procedures worth codifying: a setup sequence, a debugging recipe, a project-specific workflow. User-authored skills stay separate, and this tool never edits them.
 
-- `action: "create"` — fails if skill exists.
-- `action: "update"` — overwrites body; fails if skill absent.
-- `action: "delete"` — fails if skill absent.
+- `action: "create"` fails when the skill already exists.
+- `action: "update"` overwrites the body and fails when the skill is absent.
+- `action: "delete"` fails when the skill is absent.
 
 `name`: kebab-case (lowercase letters, digits, hyphens).
-`description`: specific; drives discovery.
-No frontmatter in `body`; generated from `name` and `description`.
+`description`: specific, since it drives discovery.
+Put no frontmatter in `body`; it is generated from `name` and `description`.

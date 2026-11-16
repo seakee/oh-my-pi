@@ -1,1 +1,1 @@
-`rule://<name>`: details.
+`rule://<name>`: the full details of one rule.

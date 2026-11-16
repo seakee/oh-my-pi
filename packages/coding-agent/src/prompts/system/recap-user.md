@@ -1,5 +1,5 @@
 <recap>
-User stepped away; returning. Recap: <40 words, 1–2 plain sentences, no markdown. Lead: overall goal, current task; then one next action. Skip: root-cause narrative, fix internals, secondary to-dos, em-dash tangents.
+The user stepped away and has come back. Recap in under 40 words, in one or two plain sentences, with no markdown. Lead with the overall goal and the current task, then one next action. Leave out root-cause narrative, implementation internals, secondary to-dos, and tangents.
 {{#if goal}}
 Overall goal: {{goal}}
 {{/if}}

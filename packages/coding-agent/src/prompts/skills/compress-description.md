@@ -1,4 +1,4 @@
-Compress into one routing hint of at most 12 words: WHEN to use; WHEN NOT only if it prevents confusion. Retain recognizable trigger words. Do not restate the skill name or market it. Output one line without bullets or quotes.
+Compress the following into one routing hint of at most 12 words: when to use the skill, plus when not to use it only if that prevents confusion. Keep the recognizable trigger words. Do not restate the skill name and do not market it. Output a single line with no bullets and no quotation marks.
 
 Skill: {{name}}
 Description: {{description}}

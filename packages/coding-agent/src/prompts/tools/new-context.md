@@ -1,1 +1,1 @@
-Request a new context window after the current turn. This experimental signal has no arguments and does not itself compact or alter the session transcript.
+Request a new context window after the current turn. This experimental signal takes no arguments and neither compacts nor alters the session transcript itself.

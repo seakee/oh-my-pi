@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Reworded the archive-summary prompt while preserving archive references and summary-output requirements.
+
 ## [18.12.4] - 2026-10-20
 
 ### Fixed

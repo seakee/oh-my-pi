@@ -37,6 +37,9 @@ import {
 	validateAgentToolArguments,
 } from "@oh-my-pi/pi-agent-core";
 import { type Tool as AiTool, jsonSchemaToTypeScript, toolWireSchema } from "@oh-my-pi/pi-ai";
+import { prompt } from "@oh-my-pi/pi-utils";
+import xdevCatalogTemplate from "../prompts/system/xdev-catalog.md" with { type: "text" };
+import xdevListingTemplate from "../prompts/system/xdev-listing.md" with { type: "text" };
 import { schemaDeclaresIntentField } from "../utils/tool-schema";
 import { stripXdUrlPrefix, XD_URL_PREFIX } from "@oh-my-pi/pi-tui/tools/xd-url";
 import { truncateHeadBytes } from "@oh-my-pi/pi-tui/tools/streaming-output";
@@ -308,12 +311,11 @@ export function xdevEntries(state: XdevState): Array<{ name: string; summary: st
 /** `read xd://` listing with one device per line. */
 export function xdevListing(state: XdevState): string {
 	const rows = xdevEntries(state).map(({ name, summary }) => `${XD_URL_PREFIX}${name.padEnd(14)} ${summary}`);
-	return [
-		`${XD_URL_PREFIX} ${state.mountedNames.size} mounted tool devices.`,
-		...rows,
-		"",
-		`Read ${XD_URL_PREFIX}<tool> for docs + JSON schema; write the JSON args object to ${XD_URL_PREFIX}<tool> to execute. Active top-level tools accept the same dispatch.`,
-	].join("\n");
+	return prompt.render(xdevListingTemplate, {
+		prefix: XD_URL_PREFIX,
+		count: state.mountedNames.size,
+		rows,
+	});
 }
 
 /** Docs + schema for any enabled tool. */
@@ -367,12 +369,7 @@ export function renderXdevPromptDocs(docs: XdevPromptDocs, listedElsewhere?: Rea
 		if (!listedElsewhere?.has(name)) lines.push(`- ${XD_URL_PREFIX}${name} — ${summary}`);
 	}
 	if (lines.length === 0) return docs.sections.join("\n\n");
-	const catalogSection = [
-		"## Additional devices (docs on demand)",
-		...lines,
-		"",
-		`Read ${XD_URL_PREFIX}<tool> for full docs + JSON schema before first use.`,
-	].join("\n");
+	const catalogSection = prompt.render(xdevCatalogTemplate, { prefix: XD_URL_PREFIX, entries: lines });
 	return [...docs.sections, catalogSection].join("\n\n");
 }
 

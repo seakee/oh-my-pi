@@ -1,7 +1,7 @@
 <system-notice>
 Continue.
 
-MUST resume most recent intent; complete unfinished work.
-If interrupted mid-step: resume where stopped.
-NEVER pause to summarize progress, re-confirm plan, or ask whether to proceed; continue.
+Resume the most recent intent and finish the unfinished work.
+If you were interrupted mid-step, continue from where you stopped.
+Do not pause to summarize progress, re-confirm the plan, or ask whether to proceed; keep going.
 </system-notice>

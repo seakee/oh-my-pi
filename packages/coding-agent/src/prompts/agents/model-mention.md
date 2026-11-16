@@ -1,1 +1,1 @@
-{{name}} ({{selector}}) — general-purpose agent pinned to this model, tagged by the user.
+{{name}} ({{selector}}): a general-purpose agent pinned to this model and chosen by the user.

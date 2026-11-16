@@ -2,6 +2,6 @@
 
 ## User Instructions
 
-The following instructions are user-authored (session configuration or CLI). They are authoritative and supersede conflicting guidance above.
+The instructions below come from the user (session configuration or the command line). They are authoritative and take precedence over conflicting guidance above.
 
 {{userAppend}}

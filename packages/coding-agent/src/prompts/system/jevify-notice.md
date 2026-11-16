@@ -1,41 +1,37 @@
 <system-notice>
-User message contains **jevify** → bulk classification through the `eval` kernel's `judge_batch()`. You decide once, up front; the judge processes the bulk; you read only what it flags. This overrides the tendency to split the data up and scan it yourself.
+A user message containing **jevify** means bulk classification through the `eval` kernel's `judge_batch()`. You decide once, up front; the judge processes the bulk; you read only what it flags. This overrides the tendency to split the data up and scan it yourself.
 
-<critical>
-- NEVER read bulk items before the rubric is frozen. Rubric first, data second.
-- NEVER hand-scan the bulk or delegate scanning to subagents. Judge classifies; you read only flagged items.
-- Rubric changes mid-run invalidate every prior verdict: re-judge everything.
-</critical>
+## Ground rules
+- Never read bulk items before the rubric is frozen. Rubric first, data second.
+- Never hand-scan the bulk, and never delegate scanning to subagents. The judge classifies; you read only flagged items.
+- A rubric change mid-run invalidates every prior verdict: re-judge everything.
 
-<when>
-Any list of ≥ ~20 homogeneous items with a bucket/yes-no/score question: commit or PR file diffs ("what here is unrelated?"), log lines, test names, search hits, issues, review findings, catalog rows. Under ~20 items or a question that needs cross-item reasoning: read directly.
-</when>
+## When this applies
+Any list of roughly 20 or more homogeneous items with a bucket, yes/no, or score question: commit or PR file diffs ("what here is unrelated?"), log lines, test names, search hits, issues, review findings, catalog rows. Under about 20 items, or a question that needs cross-item reasoning, read directly.
 
-<workflow>
-1. **Decide** — one `eval` cell, before any data is loaded, define as constants:
+## Workflow
+1. **Decide** — in one `eval` cell, before any data is loaded, define as constants:
    - **Unit**: what one `state` is (file diff, hunk, log line, row). Prefer the smallest unit that still carries enough context to answer.
-   - **Questions**: independent `judge` questions with fixed ids. One `choice` for the primary bucket; optional `bool`/`score` for secondary facts. Every criterion label is one sentence of observable evidence; labels exhaustive + mutually exclusive; include an explicit catch-all ("unrelated"/"other") and a "mixed" label when a unit can straddle.
+   - **Questions**: independent `judge` questions with fixed ids. One `choice` for the primary bucket, plus optional `bool`/`score` for secondary facts. Each criterion label is one sentence of observable evidence; labels are exhaustive and mutually exclusive; include an explicit catch-all ("unrelated"/"other"), and a "mixed" label when a unit can straddle.
    - **Pre-filter**: deterministic exclusions (path prefix, extension, size, pure deletions) that skip judging. Log how many units it removed.
-   - **Escalation rule**: which verdicts and which uncertainty (e.g. top probability `< 0.7`, `bool` in `0.3..0.7`, error) you will read yourself.
-   - **Cap**: max state size; truncate with a visible marker and count truncations.
+   - **Escalation rule**: which verdicts and which uncertainty (for example top probability `< 0.7`, `bool` in `0.3..0.7`, or an error) you will read yourself.
+   - **Cap**: maximum state size; truncate with a visible marker and count the truncations.
 2. **Partition** — load every unit in the kernel (`git show`, `glob`, `read`, parsers). Apply the pre-filter. Store units in a dict keyed by a stable id.
-3. **Judge** — one `judge_batch(units, questions, intent=…)` call hands the whole batch to the host (states `{id: state}` or a list; `state` carries the id, the frozen framing (commit subject, question context), and the content). Drain settled items with `await batch.drain(timeout=…)` across as many cells as needed; tabulate `{id: choice, top_p, extra facts}` from `item.answers`; keep `item.error` rows as their own row.
-4. **Escalate** — sort by the escalation rule; `read`/print only those units' diffs; confirm or overturn each with evidence. Exact-match uncertain verdicts against the code (implementation contract, callers) rather than re-judging.
-5. **Report** — counts per label, pre-filter removals, truncations, then flagged items grouped by kind with file path + one-line evidence each. Judge output is evidence, not truth: state which verdicts you confirmed by reading.
-</workflow>
+3. **Judge** — one `judge_batch(units, questions, intent=…)` call hands the whole batch to the host (states as `{id: state}` or a list; `state` carries the id, the frozen framing (commit subject, question context), and the content). Drain settled items with `await batch.drain(timeout=…)` across as many cells as needed; tabulate `{id: choice, top_p, extra facts}` from `item.answers`; keep `item.error` rows as their own row.
+4. **Escalate** — sort by the escalation rule and `read`/print only those units' diffs; confirm or overturn each one with evidence. For uncertain verdicts, check the exact match against the code (implementation contract, callers) rather than re-judging.
+5. **Report** — counts per label, pre-filter removals, and truncations, then flagged items grouped by kind with the file path and one line of evidence each. Judge output is evidence, not truth: state which verdicts you confirmed by reading.
 
-<judge>
+## Judge API
 `judge(state, questions)` — awaited; answers `{id: answer}` for a handful of questions over one state.
-`judge_batch(states, questions, *, intent=, concurrency=, retries=, min_ok=)` — bulk: the host owns the run (one judge chain, bounded fan-out, one retry per item) and returns a `JudgmentBatch`; `await batch.drain(timeout=…)` pulls `[(key, item)]` settled slices across as many cells as needed (cells time out; the run doesn't). JS: `judgeBatch(states, questions, { intent, … })`, `await batch.drain({ timeout })`.
+`judge_batch(states, questions, *, intent=, concurrency=, retries=, min_ok=)` — bulk: the host owns the run (one judge chain, bounded fan-out, one retry per item) and returns a `JudgmentBatch`; `await batch.drain(timeout=…)` pulls `[(key, item)]` settled slices across as many cells as needed (cells time out; the run does not). In JavaScript: `judgeBatch(states, questions, { intent, … })`, `await batch.drain({ timeout })`.
 - `state`: `str` | JSON object | JSON array. Every question sees the same state.
 - `{type: "choice", instructions, criteria: {label: rubric, …}}` → `{choice, probabilities, confidence}`.
 - `{type: "bool", instructions, criteria?: {true, false}}` → `{bool: P(yes)}`.
 - `{type: "score", instructions, criteria: [lowest, …, highest]}` → `{score, probabilities, confidence}`.
 - Item failures land in `item.error` and never raise; only a run that dies wholesale (no judge, `min_ok` unmet) raises from `drain()`. `status()`/`results()`/`failed()` snapshot the run; `judge_batch.attach(id)` recovers it after a kernel reset.
-Cheap + fast; prefer over `completion()`/`agent()` for every classification, ranking, or yes/no.
-</judge>
+This path is cheap and fast; prefer it over `completion()`/`agent()` for every classification, ranking, or yes/no.
 
-<example>
+## Example
 **Python:**
 
 ```python
@@ -101,20 +97,17 @@ while (Object.keys(verdicts).length + Object.keys(failures).length < batch.total
 }
 ```
 
-Then print only `diffs[f]` for `f in flag`, confirm each against the code, and report.
-</example>
+Then print only `diffs[f]` for `f` in `flag`, confirm each against the code, and report.
 
-<anti-patterns>
+## Anti-patterns
 - Reading the first N items "to get a feel" before writing the rubric.
 - One question per `judge()` call when several independent questions share a state.
 - Looping `judge()` per unit instead of one `judge_batch()` hand-off: cells time out and every call is a bridge round-trip.
-- Fanning items to `task` subagents to "review" them: they read; the judge classifies.
+- Fanning items out to `task` subagents to "review" them: they read; the judge classifies.
 - Treating a judge verdict as final without reading the flagged unit.
 - Dropping errored or truncated items silently instead of counting and escalating them.
 - Vague labels ("bad", "suspicious") instead of one-sentence observable evidence.
-</anti-patterns>
 
-<critical>
-Rubric frozen before data. Judge classifies the bulk. You read only what it flags. Report counts, then evidence.
-</critical>
+## Summary
+Freeze the rubric before loading data. Let the judge classify the bulk. Read only what it flags. Report counts first, then evidence.
 </system-notice>

@@ -1,1 +1,1 @@
-The user did not answer the approval prompt for changing `{{path}}` in time, so nothing changed; it stays {{previous}}. Continue without this change and mention it in your reply; NEVER retry unless the user asks.
+The user did not answer the approval prompt for changing `{{path}}` in time, so nothing changed and it stays {{previous}}. Continue without this change and mention it in your reply; do not retry unless the user asks.

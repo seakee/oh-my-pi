@@ -1,15 +1,17 @@
-Context checkpoint: before exploratory work; later `rewind`, retaining only concise report.
+A context checkpoint belongs before exploratory work; a later `rewind` keeps only the concise report.
 
-Use for investigations with many intermediate tool calls (`read`/`grep`/`glob`/`lsp`/etc.) to minimize subsequent context cost.
+Use it for investigations with many intermediate tool calls (`read`/`grep`/`glob`/`lsp`/etc.) to minimize the context cost that follows.
 
 Rules:
-- MUST `rewind` before yielding after starting a checkpoint.
-- NEVER `checkpoint` while another checkpoint active.
-- Subagents: disabled by default. Enable: agent-definition `tools:` frontmatter lists `checkpoint` or `rewind`; sister tool auto-included; requires `checkpoint.enabled` setting.
+
+- A started checkpoint must be rewound before you finish the turn.
+- Never start a checkpoint while another is active.
+- Subagents: disabled by default. To enable, list `checkpoint` or `rewind` in the agent definition's `tools:` frontmatter; the sister tool is included automatically, and the `checkpoint.enabled` setting is required.
 
 Typical flow:
+
 1. `checkpoint(goal: …)`
 2. Exploratory work
 3. `rewind(report: …)` with concise findings
 
-After `rewind`: intermediate checkpoint messages removed from active context; replaced by report.
+After `rewind`, the intermediate checkpoint messages leave the active context and the report replaces them.

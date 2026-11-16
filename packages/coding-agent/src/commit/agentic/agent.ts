@@ -12,6 +12,7 @@ import { createAgentSession } from "../../sdk";
 import type { AgentSessionEvent } from "../../session/agent-session";
 import type { AuthStorage } from "../../session/auth-storage";
 import type { SessionManager } from "../../session/session-manager";
+import incompleteReminderPrompt from "./prompts/incomplete-reminder.md" with { type: "text" };
 import agentUserPrompt from "./prompts/session-user.md" with { type: "text" };
 import agentSystemPrompt from "./prompts/system.md" with { type: "text" };
 import type { CommitAgentState } from "./state";
@@ -312,14 +313,11 @@ function buildReminderMessage(
 	if (requireChangelog && !state.changelogProposal) {
 		missing.push("changelog entries (propose_changelog)");
 	}
-	return `<system-reminder>
-CRITICAL: You must call the required tools before finishing.
-
-Missing: ${missing.join(", ") || "none"}.
-Reminder ${retryCount} of ${maxRetries}.
-
-Call the missing tool(s) now.
-</system-reminder>`;
+	return prompt.render(incompleteReminderPrompt, {
+		missing: missing.join(", ") || "none",
+		retryCount,
+		maxRetries,
+	});
 }
 
 function truncateToolArg(value: string): string {

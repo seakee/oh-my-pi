@@ -1,12 +1,12 @@
-Edit Mnemopi long-term memories by id. Only ids returned by `{{toolRefs.recall}}`.
+Edit long-term memories by id, using only ids that `{{toolRefs.recall}}` returned.
 
 Operations:
-- `update`: working memory; replace content and/or importance.
+- `update`: rewrite working memory, replacing its content, its importance, or both.
 - `forget`: permanently delete working memory.
-- `invalidate`: softly supersede working or episodic memory; optional `replacement_id`.
+- `invalidate`: softly supersede working or episodic memory, with an optional `replacement_id`.
 
-Fact ids — `{{toolRefs.recall}}` results marked `[facts]`: read-only. Inspect with `read memory://<id>`; any edit op → `not_editable`.
+Fact ids, marked `[facts]` in `{{toolRefs.recall}}` results, are read-only. Inspect them with `read memory://<id>`; any edit op returns `not_editable`.
 
-Prefer `invalidate` for stale memory whose history may still be useful. Use `forget` only for content requiring hard deletion.
+Prefer `invalidate` for stale memory whose history may still be useful, and reserve `forget` for content that has to be hard deleted.
 
-MUST read full memory before `update`. Recall previews clipped: trailing `…` marks truncation; `full_length` original size. `update` replaces content wholesale → updating a preview deletes its unseen tail. First `read memory://<id>`; pass merged content in `content`.
+Read the full memory before an `update`. Recall previews are clipped, with a trailing `…` marking truncation and `full_length` giving the original size, and `update` replaces content wholesale, so updating from a preview deletes its unseen tail. Read `memory://<id>` first, then pass the merged content in `content`.

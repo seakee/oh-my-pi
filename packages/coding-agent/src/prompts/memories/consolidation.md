@@ -4,7 +4,8 @@ Input corpus (raw memories):
 {{raw_memories}}
 Input corpus (rollout summaries):
 {{rollout_summaries}}
-Produce strict JSON only with this schema — you NEVER include any other output:
+
+Produce strict JSON only, with no other output, in this schema:
 {
   "memory_md": "string",
   "memory_summary": "string",
@@ -18,13 +19,14 @@ Produce strict JSON only with this schema — you NEVER include any other output
     }
   ]
 }
-Requirements:
-- memory_md: long-term memory document.
-- memory_summary: prompt-time memory guidance.
-- skills: reusable playbooks. Empty array allowed.
+
+Field requirements:
+- memory_md: the long-term memory document.
+- memory_summary: memory guidance shown at prompt time.
+- skills: reusable playbooks; an empty array is allowed.
 - skill.name maps to skills/<name>/.
 - skill.content maps to skills/<name>/SKILL.md.
-- scripts/templates/examples: optional. Each entry MUST write to skills/<name>/<bucket>/<path>.
-- Only include files worth keeping long-term. Omit stale assets so they are pruned.
-- Preserve useful prior themes. Remove stale or contradictory guidance.
-- Treat memory as advisory: current repository state wins.
+- scripts, templates, and examples are optional. Each entry must write to skills/<name>/<bucket>/<path>.
+- Include only files worth keeping long term, and omit stale assets so they are pruned.
+- Preserve useful themes from earlier memory, and remove guidance that is stale or contradictory.
+- Treat memory as advisory: the current repository state wins.

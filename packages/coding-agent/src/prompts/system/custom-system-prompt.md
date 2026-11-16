@@ -3,8 +3,7 @@
 {{/if}}
 {{customPrompt}}
 {{#if skills.length}}
-Skills are specialized knowledge. Scan descriptions for your task domain.
-If a skill applies, you MUST read `skill://<name>` before proceeding.
+Review these skill descriptions for relevant domain guidance. Read a matching `skill://<name>` before proceeding with that work.
 <skills>
 {{#list skills join="\n"}}
 <skill name="{{name}}">
@@ -15,7 +14,7 @@ If a skill applies, you MUST read `skill://<name>` before proceeding.
 {{/if}}
 {{#if hasSkillUriAccess}}
 {{#unless skills.length}}
-Loaded skills remain addressable as `skill://<name>`.
+Previously loaded skills are still available at `skill://<name>`.
 {{/unless}}
 {{/if}}
 {{#if alwaysApplyRules.length}}
@@ -24,7 +23,7 @@ Loaded skills remain addressable as `skill://<name>`.
 {{/each}}
 {{/if}}
 {{#if rules.length}}
-Rules are local constraints. You MUST read `rule://<name>` when working in that domain.
+Read the applicable `rule://<name>` before working in a listed domain; these are local constraints rather than optional reference material.
 <rules>
 {{#list rules join="\n"}}
 <rule name="{{name}}">
@@ -38,6 +37,6 @@ Rules are local constraints. You MUST read `rule://<name>` when working in that 
 {{/if}}
 {{#if secretsEnabled}}
 <redacted-content>
-Some values in tool output are redacted for security. They appear as placeholder tokens such as `$$HASH$$`, `$$HASH:CASE$$`, or `$$NAME_HASH:CASE$$` (uppercase-alphanumeric digest, optional case hint, optional friendly-name prefix). These are **not errors** — they are intentional placeholders for sensitive values (API keys, passwords, tokens). Treat them as opaque strings. NEVER attempt to decode, fix, or report them as problems.
+Sensitive output values are intentionally replaced with opaque tokens, including `$$HASH$$`, `$$HASH:CASE$$` and `$$NAME_HASH:CASE$$`. Their digest is uppercase alphanumeric and may have a case hint or a friendly-name prefix. These represent protected values such as credentials, not tool errors. Do not decode them, repair them or report their presence as a failure.
 </redacted-content>
 {{/if}}

@@ -1,6 +1,6 @@
 <todo_context>
-Persisted todos: live progress state for current goal, not old transcript decoration; goal continuations lack visible user nudge → treat as live state.
-Before substantial work: compare next action with todos. If item stale, already finished, or no longer active pointer, call `todo` first: mark done or rewrite list. Do not leave stale in_progress while working on later phases.
+These persisted todos are the live progress state for the current goal, not decoration from an old transcript; a goal continuation has no visible user nudge, so treat them as live state.
+Before substantial work, compare your next action with the todos. If an item is stale, already finished, or no longer the active pointer, call `todo` first and either mark it done or rewrite the list. Do not leave a stale in_progress item while working on later phases.
 
 Overall: {{closed}}/{{total}} done, {{open}} open.
 {{#each phases}}

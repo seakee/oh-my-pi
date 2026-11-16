@@ -193,6 +193,7 @@ import goalTodoContextPrompt from "../prompts/goals/goal-todo-context.md" with {
 import anthropicUsageWrapUpPrompt from "../prompts/system/anthropic-usage-wrap-up.md" with { type: "text" };
 import autoContinuePrompt from "../prompts/system/auto-continue.md" with { type: "text" };
 import checkpointActiveNoticeTemplate from "../prompts/system/checkpoint-active-notice.md" with { type: "text" };
+import checkpointRewindReminderTemplate from "../prompts/system/checkpoint-rewind-reminder.md" with { type: "text" };
 import interruptedThinkingTemplate from "../prompts/system/interrupted-thinking.md" with { type: "text" };
 import planModeActivePrompt from "../prompts/system/plan-mode-active.md" with { type: "text" };
 import planModeReferencePrompt from "../prompts/system/plan-mode-reference.md" with { type: "text" };
@@ -11434,11 +11435,7 @@ export class AgentSession implements SettingsScope {
 		if (!this.#checkpointState || this.#pendingRewindReport) {
 			return false;
 		}
-		const reminder = [
-			"<system-warning>",
-			"You are in an active checkpoint. You MUST call rewind with your investigation findings before yielding. Do NOT yield without completing the checkpoint.",
-			"</system-warning>",
-		].join("\n");
+		const reminder = prompt.render(checkpointRewindReminderTemplate);
 		this.agent.appendMessage({
 			role: "developer",
 			content: [{ type: "text", text: reminder }],

@@ -21,11 +21,11 @@ Results arrive later in a `<function_results>` block, one `<result>` per call (f
 
 ## Rules
 
-- `name` MUST match a listed function.
-- String/scalar parameters: exact text, spaces preserved — bodies are read by regex (delimiter matching), NOT a real XML parser, so never HTML-escape them (emit `a & b`, not `a &amp; b`; `<`/`>` stay literal); only the body's own `</parameter>` closing tag is reserved. Lists/objects: JSON.
-- Multiple calls: multiple `<invoke>` blocks in one `<minimax:tool_call>`.
-- You MAY write visible text before the calls.
-- NEVER emit `tool_calls` JSON.
-- NEVER use `<function_calls>` or the legacy `<tool_name>`/`<parameters>` call syntax.
-- Read each `<result>`/`<error>` in call order. NEVER emit `<function_results>` yourself.
-- Emit the stop sequence ONLY after the call is fully written — NEVER announce a tool then stop (e.g. halting at "Let's run `cargo clippy`" with no `<invoke>` emitted). Write the complete call, THEN the stop sequence, THEN halt.
+- `name` must match a listed function.
+- String and scalar parameters are exact text with spaces preserved. Their bodies are read by regex delimiter matching, not by a real XML parser, so never HTML-escape them: emit `a & b`, not `a &amp; b`, and keep `<` and `>` literal. Only the body's own `</parameter>` closing tag is reserved. Lists and objects are JSON.
+- For multiple calls, emit multiple `<invoke>` blocks inside one `<minimax:tool_call>`.
+- You may write visible text before the calls.
+- Never emit `tool_calls` JSON.
+- Never use `<function_calls>`, nor the legacy `<tool_name>`/`<parameters>` call syntax.
+- Read each `<result>` or `<error>` in call order, and never emit `<function_results>` yourself.
+- Emit the stop sequence only after the call is fully written. Never announce a tool and then stop — do not halt at "Let's run `cargo clippy`" with no `<invoke>` emitted. Write the complete call, then the stop sequence, then halt.

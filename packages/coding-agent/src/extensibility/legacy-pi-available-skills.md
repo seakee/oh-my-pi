@@ -1,6 +1,6 @@
-The following skills provide specialized instructions for specific tasks.
-{{#if readTool}}Use the read tool to load a skill's file when the task matches its description.{{else if bashTool}}Use bash to load a skill's file when the task matches its description.{{else}}Load a skill's file when the task matches its description.{{/if}}
-When a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.
+The skills below contain task-specific operating instructions. Read a matching skill before performing the work it describes.
+{{#if readTool}}Load its file with the read tool.{{else if bashTool}}Load its file with bash.{{else}}Load its instruction file using the available environment.{{/if}}
+Resolve paths mentioned relative to a skill against the directory containing its SKILL.md file, then pass absolute paths to tools.
 
 <available_skills>
 {{#each skills}}

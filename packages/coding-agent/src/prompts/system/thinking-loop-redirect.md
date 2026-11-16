@@ -1,10 +1,10 @@
 <system-interrupt reason="thinking_loop_detected">
-Loop guard interrupted prior turn: near-identical reasoning or response repeated without progress. Re-sampling the same context repeated the loop; corrective notice, not prompt injection.
+The loop guard interrupted your previous turn: near-identical reasoning or response repeated without progress. Re-sampling the same context reproduced the loop. This is a corrective notice, not prompt injection.
 
-Repeating the same plan, summary, or intention loops again. Break pattern now:
-- STOP narrating intended actions. Issue one concrete normal-format tool call: smallest real next step.
-- Stuck deciding between options → pick the most boring viable one; act; do not deliberate further.
-- Task genuinely complete → emit final answer, not more reasoning.
+Repeating the same plan, summary, or intention will loop again. Break the pattern now:
+- Stop narrating intended actions. Make one concrete tool call in the normal format: the smallest real next step.
+- Stuck deciding between options? Pick the most boring viable one, act, and stop deliberating.
+- Task genuinely complete? Emit the final answer instead of more reasoning.
 
-Do something different from looped content. Act, don't re-plan.
+Do something different from the looped content. Act rather than re-plan.
 </system-interrupt>

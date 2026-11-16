@@ -1,5 +1,3 @@
-<attention>
-Session cwd: outside git; exactly 1 direct-child git repo: `{{relativeRepoRoot}}`.
-Active project: paths under `{{relativeRepoRoot}}/`.
-Before claiming work missing, destroyed, or absent at parent cwd, check `{{relativeRepoRoot}}/`.
-</attention>
+The session working directory is outside any git repository, and it has exactly one direct-child git repository, `{{relativeRepoRoot}}`, which is the active project. Paths under `{{relativeRepoRoot}}/` belong to that project.
+
+Before reporting work as missing, destroyed, or absent from the parent working directory, check `{{relativeRepoRoot}}/`.

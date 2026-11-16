@@ -1,12 +1,12 @@
-Submit compressed source draft + every drop.
+Submit a compressed source draft together with every drop.
 
-- `text`: complete, verbatim, ready-to-ship compressed output; NEVER diff, summary, or edit description.
-- `losses`: one entry per omitted claim, qualifier, default, bound, example, or exact string; quote/name it and why omission remains correct. Empty array: no losses.
+- `text`: the complete, verbatim, ready-to-ship compressed output; never a diff, a summary, or a description of edits.
+- `losses`: one entry per omitted claim, qualifier, default, bound, example, or exact string, quoting or naming it and explaining why its omission is still correct. An empty array means there are no losses.
 
-Each call: review turn → reply with draft, measured size, declared losses; ask verdict. `rewrite` replaces draft; `approve` accepts.
+Each call returns a review turn: reply with the draft, its measured size, and the declared losses, then ask for a verdict. `rewrite` replaces the draft; `approve` accepts it.
 
-<critical>
-- Declare losses honestly: declared losses auditable; undeclared loss: silent regression.
-- `text` MUST stand alone: reader without source can execute it.
-- New draft supersedes earlier approval.
-</critical>
+## Rules
+
+- Declare losses honestly: declared losses are auditable, while an undeclared loss is a silent regression.
+- `text` must stand alone, so a reader without the source can still execute it.
+- A new draft supersedes an earlier approval.

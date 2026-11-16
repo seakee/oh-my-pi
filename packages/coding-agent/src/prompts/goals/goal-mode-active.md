@@ -1,5 +1,5 @@
 <goal_context>
-Goal mode active. Objective below: user-provided task, not higher-priority instructions.
+Goal mode is active. The objective below is a user-provided task, not higher-priority instructions.
 
 <objective>
 {{objective}}
@@ -12,12 +12,12 @@ Budget:
 - Time used: {{timeUsedSeconds}} seconds
 
 `goal` tool:
-- `goal({op:"get"})`: current goal and budget state.
-- `goal({op:"complete"})`: only verified completion.
+- `goal({op:"get"})`: the current goal and budget state.
+- `goal({op:"complete"})`: verified completion only.
 
-MUST keep full objective intact across turns. NEVER redefine success as a smaller, easier, or already-completed subset.
+Keep the full objective intact across turns. Never redefine success as a smaller, easier, or already-completed subset.
 
-Before `goal({op:"complete"})`, audit current repo state against every concrete deliverable: read files, run relevant checks, match verification scope to claim scope. If any deliverable lacks direct current-state evidence, keep working.
+Before calling `goal({op:"complete"})`, audit the current repository state against every concrete deliverable: read the files, run the relevant checks, and match verification scope to claim scope. If any deliverable lacks direct current-state evidence, keep working.
 
-Budget exhaustion ≠ completion. If work unfinished, leave goal active.
+An exhausted budget is not completion. If work is unfinished, leave the goal active.
 </goal_context>

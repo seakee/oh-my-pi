@@ -1,12 +1,12 @@
-Starts persistent conversational coding-agent worker session (edit, bash, grep, everything).
+Start a persistent conversational coding-agent worker session with editing, bash, grep, and the rest.
 
 CLI flavor by task:
-- `fast`: low-latency model; mechanical, well-specified work (renames, boilerplate, running tests, data collection).
-- `good`: strong model; hard work (design, debugging, multi-file changes, judgment calls).
+- `fast`: a low-latency model for mechanical, well-specified work (renames, boilerplate, running tests, data collection).
+- `good`: a strong model for hard work (design, debugging, multi-file changes, judgment calls).
 
-`prompt`: first session instruction. Worker starts with NO context beyond it; include files, constraints, acceptance criteria.
-`name`: optional session label; otherwise generated.
+`prompt`: the first instruction for the session. The worker starts with no context beyond it, so include the files, constraints, and acceptance criteria.
+`name`: an optional session label, generated when omitted.
 
-Returns session id immediately. On worker completion, turn result—activity trace + worker response—delivered automatically. Do not wait unless blocked; direct other sessions.
+Returns a session id immediately. When the worker finishes, its turn result (an activity trace plus the worker's response) is delivered automatically. Do not wait unless you are blocked; direct other sessions meanwhile.
 
-Session persists after turn; remembers whole conversation. Same-workstream follow-up: `vibe_send`; NEVER spawn second session.
+The session persists after the turn and remembers the whole conversation. For a follow-up in the same workstream use `vibe_send`; never spawn a second session.

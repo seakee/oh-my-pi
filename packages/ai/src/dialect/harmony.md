@@ -12,7 +12,7 @@ Put private reasoning in an `analysis` message:
 <|start|>assistant<|channel|>analysis<|message|>private reasoning<|end|>
 ```
 
-Tool results arrive as messages authored by the function, addressed back to the assistant:
+Tool results arrive as messages authored by the function and addressed back to the assistant:
 
 ```text
 <|start|>functions.function_name to=assistant<|channel|>commentary<|message|>verbatim tool result<|end|>
@@ -20,12 +20,12 @@ Tool results arrive as messages authored by the function, addressed back to the 
 
 ## Rules
 
-- Recipient is `functions.` + a listed function name.
-- Body is one JSON object matching the schema; omit optional arguments you are not setting.
-- Argument string values use only normal JSON string escaping (`\"`, `\\`, `\n`); never HTML-escape their contents — write `a & b`, not `a &amp; b`.
-- Multiple calls = consecutive call messages.
-- An optional visible preamble is a `commentary` message ending `<|end|>`.
-- NEVER put tool calls in `analysis`.
-- NEVER wrap calls in Markdown/code fences.
-- Read each tool-result message in call order. NEVER emit tool-result messages yourself.
-- Emit the stop sequence ONLY after the call is fully written — NEVER announce a tool then stop (e.g. halting at "Let's run `cargo clippy`" with no `<|call|>` message emitted). Write the complete call, THEN the stop sequence, THEN halt.
+- The recipient is `functions.` followed by a listed function name.
+- The body is one JSON object matching the schema; omit optional arguments you are not setting.
+- Argument string values use only normal JSON string escaping (`\"`, `\\`, `\n`). Never HTML-escape their contents: write `a & b`, not `a &amp; b`.
+- Multiple calls are consecutive call messages.
+- An optional visible preamble is a `commentary` message ending with `<|end|>`.
+- Never put tool calls in `analysis`.
+- Never wrap calls in Markdown or code fences.
+- Read each tool-result message in call order, and never emit tool-result messages yourself.
+- Emit the stop sequence only after the call is fully written. Never announce a tool and then stop — do not halt at "Let's run `cargo clippy`" with no `<|call|>` message emitted. Write the complete call, then the stop sequence, then halt.

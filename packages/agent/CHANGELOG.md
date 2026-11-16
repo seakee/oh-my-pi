@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Reworded application-owned compaction, branch-summary, and handoff instructions without changing summary delimiters or continuation protocols.
+
 ## [18.12.4] - 2026-10-20
 
 ### Fixed

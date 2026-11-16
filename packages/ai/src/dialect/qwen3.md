@@ -20,9 +20,9 @@ verbatim tool result
 
 ## Rules
 
-- `name` MUST match a listed function; `arguments` is a JSON object, never a JSON string.
-- Argument string values use only normal JSON string escaping (`\"`, `\\`, `\n`); never HTML-escape their contents — write `a & b`, not `a &amp; b`.
-- Multiple calls = consecutive `<tool_call>...</tool_call>` blocks; keep prose outside them.
-- NEVER put tool calls inside `<think>`.
-- Read each `<tool_response>` in call order. NEVER emit `<tool_response>` yourself.
-- Emit the stop sequence ONLY after the call is fully written — NEVER announce a tool then stop (e.g. halting at "Let's run `cargo clippy`" with no `<tool_call>` emitted). Write the complete call, THEN the stop sequence, THEN halt.
+- `name` must match a listed function, and `arguments` is a JSON object, never a JSON string.
+- Argument string values use only normal JSON string escaping (`\"`, `\\`, `\n`). Never HTML-escape their contents: write `a & b`, not `a &amp; b`.
+- For multiple calls, emit consecutive `<tool_call>...</tool_call>` blocks and keep prose outside them.
+- Never put tool calls inside `<think>`.
+- Read each `<tool_response>` in call order, and never emit `<tool_response>` yourself.
+- Emit the stop sequence only after the call is fully written. Never announce a tool and then stop — do not halt at "Let's run `cargo clippy`" with no `<tool_call>` emitted. Write the complete call, then the stop sequence, then halt.

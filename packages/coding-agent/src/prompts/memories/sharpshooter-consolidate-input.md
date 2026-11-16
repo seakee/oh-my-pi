@@ -12,7 +12,7 @@
 {{style}}
 </style.md>
 
-## Project docs digest (already documented — EXCLUDE anything covered here)
+## Project docs digest (already documented — exclude anything covered here)
 
 <project-docs>
 {{projectDocs}}
@@ -22,4 +22,4 @@
 
 {{sessions}}
 
-Apply the queued deltas to the current files under the admission law and call `replace_memory_files` once with all three complete files.
+Apply the queued deltas to the current files under the admission rules, then call `replace_memory_files` once with all three complete files.

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt application-owned session, tool, subagent, review, title, memory, and auxiliary prompts with provider-neutral prose while retaining user/project rules, template bindings, tool interfaces, and structured-output protocols. Dynamic tool catalogs and checkpoint/commit reminders now use dedicated templates. See [fork maintenance](../../docs/provider-neutral-prompts.md) for scope, verification, and limitations.
+
 ## [18.12.6] - 2026-10-21
 
 ### Added
