@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt application-owned session, tool, subagent, review, title, memory, and auxiliary prompts for `v19.0.0` with provider-neutral prose and Wire tool names (`execute_code`, `delegate_task`, `await_jobs`, `task_list`, `prompt_user`, `submit_output`, etc.), while retaining user/project rules, template bindings, and structured-output protocols. Dynamic tool catalogs and checkpoint/commit reminders use dedicated templates. See [fork maintenance](../../docs/provider-neutral-prompts.md) for scope, verification, and limitations.
+- Changed `inlineToolDescriptors` default from `"auto"` to `"off"` so tool descriptors remain in provider `tools[]` schemas instead of duplicating into system instructions.
+
+### Fixed
+
+- Rewrote `commit-guidance.md` around `execute_code`'s `commit` namespace to eliminate upstream HTTP 429 triggers while preserving selective commit semantics.
+
 ## [19.0.0] - 2026-11-18
 
 ### Breaking Changes
