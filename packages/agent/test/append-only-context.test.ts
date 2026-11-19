@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { type } from "@oh-my-pi/omptype";
 import { AppendOnlyContextManager, AppendOnlyLog, StablePrefix } from "@oh-my-pi/pi-agent-core/append-only-context";
 import { invalidateMessageCache } from "@oh-my-pi/pi-agent-core/compaction/message-cache";
+import { WIRE_INTENT_FIELD } from "@oh-my-pi/pi-agent-core/wire-tool-codec";
 import type { AgentContext, AgentTool } from "@oh-my-pi/pi-agent-core/types";
 import type { Message, Tool, ToolExample } from "@oh-my-pi/pi-ai";
 import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
@@ -781,24 +782,23 @@ describe("intent injection through build()", () => {
 		const result = mgr.build(ctx, { intentTracing: true });
 		const params = result.tools?.[0]?.parameters as { properties?: Record<string, unknown>; required?: string[] };
 		expect(params?.properties).toBeDefined();
-		expect(params!.properties![INTENT_FIELD]).toBeDefined();
-		expect(params!.required).toContain(INTENT_FIELD);
+		expect(params!.properties![WIRE_INTENT_FIELD]).toBeDefined();
+		expect(params!.required).toContain(WIRE_INTENT_FIELD);
 	});
 
-	it("materializes ArkType params and keeps `i` first in authored order", () => {
+	it("materializes ArkType params and keeps `summary` first in authored order", () => {
 		const mgr = new AppendOnlyContextManager();
 		const tool = makeTool("write", "Write", type({ path: "string", content: "string" }));
 		const ctx = makeContext({ tools: [tool] });
 
 		const result = mgr.build(ctx, { intentTracing: true });
 		const params = result.tools?.[0]?.parameters as { properties?: Record<string, unknown>; required?: string[] };
-		// `i` must lead; authored order (path before content) is preserved rather
-		// than ArkType's alphabetized-by-hash order (content, path).
-		expect(Object.keys(params.properties ?? {})).toEqual([INTENT_FIELD, "path", "content"]);
-		expect(params.required).toContain(INTENT_FIELD);
+		// Wire intent field must lead; authored order (path before content) is preserved.
+		expect(Object.keys(params.properties ?? {})).toEqual([WIRE_INTENT_FIELD, "path", "content"]);
+		expect(params.required).toContain(WIRE_INTENT_FIELD);
 	});
 
-	it("omits `i` when intentTracing is false", () => {
+	it("omits intent field when intentTracing is false", () => {
 		const mgr = new AppendOnlyContextManager();
 		const tool = makeTool("read", "Read", {
 			type: "object",
@@ -810,7 +810,9 @@ describe("intent injection through build()", () => {
 		const result = mgr.build(ctx, { intentTracing: false });
 		const params = result.tools?.[0]?.parameters as { properties?: Record<string, unknown>; required?: string[] };
 		expect(params?.properties?.[INTENT_FIELD]).toBeUndefined();
+		expect(params?.properties?.[WIRE_INTENT_FIELD]).toBeUndefined();
 		expect(params?.required ?? []).not.toContain(INTENT_FIELD);
+		expect(params?.required ?? []).not.toContain(WIRE_INTENT_FIELD);
 	});
 
 	it("intentTracing flip invalidates the fingerprint cache", () => {
@@ -843,17 +845,17 @@ describe("tool examples injection through build()", () => {
 		const desc = result.tools?.[0]?.description ?? "";
 		expect(desc).toContain("<examples>");
 		expect(desc).toContain("# Find files");
-		expect(desc).toContain('find(paths=["src/**/*.ts"])');
+		expect(desc).toContain('semantic_search(paths=["src/**/*.ts"])');
 	});
 
-	it("injects the `i` placeholder into examples when intentTracing is on", () => {
+	it("injects the wire intent placeholder into examples when intentTracing is on", () => {
 		const mgr = new AppendOnlyContextManager();
 		const tool = makeTool("find", "Find files.", findParams, findExamples);
 		const ctx = makeContext({ tools: [tool] });
 
 		const result = mgr.build(ctx, { intentTracing: true });
 		const desc = result.tools?.[0]?.description ?? "";
-		expect(desc).toContain(`${INTENT_FIELD}="…"`);
+		expect(desc).toContain(`${WIRE_INTENT_FIELD}="…"`);
 	});
 
 	it("examples presence flip invalidates the fingerprint cache", () => {

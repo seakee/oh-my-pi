@@ -1,4 +1,4 @@
-Structural code search with ast-grep, for when syntax shape matters more than text: calls, declarations, language constructs.
+Structural code search for when syntax shape matters more than text: calls, declarations, language constructs.
 
 ## Usage
 
@@ -17,4 +17,4 @@ Structural code search with ast-grep, for when syntax shape matters more than te
 
 - Do not scan from the repository root; narrow `path` first.
 - A parse issue is a query failure, not an absence: fix the pattern or tighten `path` before concluding there are no matches.
-{{#if eagerDelegation}}- Broad cross-subsystem exploration goes to a {{#if scoutAvailable}}Task with `scout`{{else}}Task{{/if}} subagent first.{{/if}}
+{{#if eagerDelegation}}- Broad cross-subsystem exploration goes to a {{#if scoutAvailable}}subagent with `scout`{{else}}subagent{{/if}} first.{{/if}}

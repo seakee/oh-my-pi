@@ -18,14 +18,14 @@ Your only tools are `rewrite` and `approve`. You cannot inspect files, search or
 
 Use labels, explicit scopes and shared subjects when they make relationships unambiguous. For example:
 
-| Original | Compact form |
-| --- | --- |
-| "The `name` field is the stable launch identifier." | `name: stable launch id.` |
-| "You must call open before you can run code." | `MUST open before run.` |
-| "If no value is given, the timeout defaults to 30 seconds." | `Default 30s.` |
-| "Because navigation re-renders the page, refs go stale, so snapshot again." | `Navigation invalidates refs → re-snapshot.` |
-| "The action may be open, close, or run." | `action: open, close, run.` |
-| "This requires that the branch was already checked out." | `Requires prior checkout.` |
+|Original|Compact form|
+|---|---|
+|"The `name` field is the stable launch identifier."|`name: stable launch id.`|
+|"You must call open before you can run code."|`open required before run.`|
+|"If no value is given, the timeout defaults to 30 seconds."|`Default 30s.`|
+|"Because navigation re-renders the page, refs go stale, so snapshot again."|`Navigation invalidates refs -> re-snapshot.`|
+|"The action may be open, close, or run."|`action: open, close, run.`|
+|"This requires that the branch was already checked out."|`Requires prior checkout.`|
 
 A verbless assertion such as `X required` can carry the predicate directly. Keep labels to one colon per line. Name a subject once before a clearly related run of predicates; use a scope statement such as `Times in ms.` for a shared unit.
 
@@ -43,7 +43,7 @@ Remove articles, copulas, expletive there/it, complementizer `that`, relative pr
 - Exact identifiers, API names, flags, paths, expressions, format literals and error messages.
 - Template syntax such as `{{var}}`, `{{#if x}}`, `{{/if}}`, `{{{raw}}}`, `${...}` and `%s`, verbatim and in place. Every original placeholder must remain; do not rename, reorder or drop it.
 - Parsed YAML frontmatter keys, values and quoting between `---` fences, unchanged.
-- Structural tags matched by a consumer, such as `<critical>`, `<instruction>` or `<example>`; compact only the prose inside them.
+- Structural tags matched by a consumer, such as `<summary>`, `<section>` or `<example>`; compact only the prose inside them.
 - Fenced code, its language tags and examples that demonstrate a required shape, unchanged.
 - Prepositions that determine relationships, such as reading from rather than writing to a location.
 - Failure and throw conditions, silent-failure warnings and apparently redundant instructions that already prevent a known mistake.

@@ -1,5 +1,5 @@
 <system-notice>
-A user message containing **jevify** means bulk classification through the `eval` kernel's `judge_batch()`. You decide once, up front; the judge processes the bulk; you read only what it flags. This overrides the tendency to split the data up and scan it yourself.
+A user message containing **jevify** means bulk classification through the `execute_code` kernel's `judge_batch()`. You decide once, up front; the judge processes the bulk; you read only what it flags. This overrides the tendency to split the data up and scan it yourself.
 
 ## Ground rules
 - Never read bulk items before the rubric is frozen. Rubric first, data second.
@@ -10,7 +10,7 @@ A user message containing **jevify** means bulk classification through the `eval
 Any list of roughly 20 or more homogeneous items with a bucket, yes/no, or score question: commit or PR file diffs ("what here is unrelated?"), log lines, test names, search hits, issues, review findings, catalog rows. Under about 20 items, or a question that needs cross-item reasoning, read directly.
 
 ## Workflow
-1. **Decide** — in one `eval` cell, before any data is loaded, define as constants:
+1. **Decide** — in one `execute_code` cell, before any data is loaded, define as constants:
    - **Unit**: what one `state` is (file diff, hunk, log line, row). Prefer the smallest unit that still carries enough context to answer.
    - **Questions**: independent `judge` questions with fixed ids. One `choice` for the primary bucket, plus optional `bool`/`score` for secondary facts. Each criterion label is one sentence of observable evidence; labels are exhaustive and mutually exclusive; include an explicit catch-all ("unrelated"/"other"), and a "mixed" label when a unit can straddle.
    - **Pre-filter**: deterministic exclusions (path prefix, extension, size, pure deletions) that skip judging. Log how many units it removed.
@@ -103,7 +103,7 @@ Then print only `diffs[f]` for `f` in `flag`, confirm each against the code, and
 - Reading the first N items "to get a feel" before writing the rubric.
 - One question per `judge()` call when several independent questions share a state.
 - Looping `judge()` per unit instead of one `judge_batch()` hand-off: cells time out and every call is a bridge round-trip.
-- Fanning items out to `task` subagents to "review" them: they read; the judge classifies.
+- Fanning items out to `delegate_task` subagents to "review" them: they read; the judge classifies.
 - Treating a judge verdict as final without reading the flagged unit.
 - Dropping errored or truncated items silently instead of counting and escalating them.
 - Vague labels ("bad", "suspicious") instead of one-sentence observable evidence.

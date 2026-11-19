@@ -9,7 +9,6 @@
  */
 import * as path from "node:path";
 import { resolveContainedPath, resolveContainedPathSync } from "../discovery/contained-path";
-import ompDoc from "../prompts/internal-urls/omp.md" with { type: "text" };
 import { getDocFilenames, getDocsDiskRoot, getEmbeddedDoc } from "./docs-index";
 import { ompDocFilename, ompDocRel, ompDocsScopeEntries } from "./omp-scope";
 import type {
@@ -50,11 +49,6 @@ function docFileFor(url: InternalUrl): string | undefined {
 export class OmpProtocolHandler implements ProtocolHandler {
 	readonly scheme = "omp";
 	readonly spec: SchemeSpec = { backing: "virtual", selectors: "lines", immutable: true, linkable: true };
-
-	/** Always advertised: harness docs are embedded in every build. */
-	promptDoc(): string {
-		return ompDoc.trim();
-	}
 
 	async resolve(url: InternalUrl): Promise<InternalResource> {
 		const filename = ompDocFilename(url);

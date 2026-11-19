@@ -17,7 +17,7 @@ import type { SingleResult } from "@oh-my-pi/pi-tui/tools/task";
 import { TempDir } from "@oh-my-pi/pi-utils";
 import { createInMemoryAuthStorage } from "./helpers/agent-session-setup";
 
-const deliveryGuidance = "Results auto-deliver; NEVER poll.";
+const deliveryGuidance = "Results auto-deliver; do not poll.";
 const sessions: AgentSession[] = [];
 const roots: TempDir[] = [];
 const stores: ModelRegistry[] = [];
@@ -64,7 +64,8 @@ function text(message: Pick<ToolResultMessage, "content">): string {
 
 function taskResults(messages: AgentMessage[]): ToolResultMessage[] {
 	return messages.filter(
-		(message): message is ToolResultMessage => message.role === "toolResult" && message.toolName === "task",
+		(message): message is ToolResultMessage =>
+			message.role === "toolResult" && (message.toolName === "task" || message.toolName === "delegate_task"),
 	);
 }
 
@@ -105,7 +106,7 @@ async function harness(options: Partial<CreateAgentSessionOptions> = {}, inline 
 				content: ["first", "second"].map(id => ({
 					type: "toolCall" as const,
 					id,
-					name: "task",
+					name: "delegate_task",
 					arguments: { agent: "task", name: id, task: "Inspect" },
 				})),
 				stopReason: "toolUse",
@@ -145,7 +146,7 @@ async function harness(options: Partial<CreateAgentSessionOptions> = {}, inline 
 		requests.push({
 			messages: structuredClone(context.messages),
 			systemPrompt: context.systemPrompt?.slice(),
-			taskDescription: context.tools?.find(tool => tool.name === "task")?.description ?? "",
+			taskDescription: context.tools?.find(tool => tool.name === "delegate_task")?.description ?? "",
 		});
 		return mock.stream(model, context, streamOptions);
 	};
@@ -159,34 +160,31 @@ describe("SDK async task guidance", () => {
 			extensions: [taskWrapper],
 		});
 		await session.prompt("Delegate two independent inspections");
-		expect(taskResults(requests[1].messages).map(text)).toEqual([
-			"Spawned agent `first` (job `first`).",
-			"Spawned agent `second` (job `second`).",
-		]);
+		const [first, second] = taskResults(requests[1].messages).map(text);
+		expect(first).toStartWith("Spawned agent `first` (job `first`).");
+		expect(first).toContain("proc://<id>/kill");
+		expect(second).toBe("Spawned agent `second` (job `second`).");
 		const description = requests[1].taskDescription;
 		expect(description).toContain("Inspect the named target");
 		expect(description).toContain(deliveryGuidance);
-		expect(description).toContain("without consuming delivery");
-		expect(description).toContain("proc://<id>/kill");
+		expect(description).not.toContain("proc://");
 		expect(description).not.toContain("`solutionSpace`");
 	});
 
 	it.each(["off", "on"])(
-		"sends guidance once through descriptors without repeating it in results (inline=%s)",
+		"sends the delivery rule once through descriptors and the job lifecycle with the first spawn result (inline=%s)",
 		async inline => {
 			const { session, requests, mock } = await harness({}, inline);
 			await session.prompt("Delegate two independent inspections");
 			const sent = taskResults(requests[1].messages);
-			expect(sent.map(text)).toEqual([
-				"Spawned agent `first` (job `first`).",
-				"Spawned agent `second` (job `second`).",
-			]);
+			expect(sent.map(text).filter(result => result.includes("without consuming delivery"))).toHaveLength(1);
+			expect(sent.map(text)[1]).toBe("Spawned agent `second` (job `second`).");
 			for (const request of requests) {
 				const instructions = inline === "on" ? request.systemPrompt?.join("\n") : request.taskDescription;
 				expect(instructions?.split(deliveryGuidance).length).toBe(2);
 			}
 			mock.push(() => ({
-				content: [{ type: "toolCall", id: "third", name: "task", arguments: { name: "third", task: "Inspect" } }],
+				content: [{ type: "toolCall", id: "third", name: "delegate_task", arguments: { name: "third", task: "Inspect" } }],
 				stopReason: "toolUse",
 			}));
 			mock.push(() => ({ content: [{ type: "text", text: "Spawned" }], stopReason: "stop" }));

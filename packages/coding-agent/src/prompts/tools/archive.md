@@ -1,4 +1,4 @@
-Read-only local history through the global `archive`: recent projects, past sessions with recaps, and searchable prompt history.
+Read-only local history: recent projects, past sessions with recaps, and searchable prompt history.
 
 The `archive` object exists in JavaScript and Python Eval; it is not a standalone tool.
 
@@ -10,12 +10,12 @@ The `archive` object exists in JavaScript and Python Eval; it is not a standalon
 - `projects({limit})` → `[{path, sessions, lastActive, latest}]` by last activity; `latest` is the project's newest session.
 - `sessions({project, limit})` → `[{id, file, project, title, created, modified, messages, status, recap}]`, newest first; 0-turn empties are skipped, and `recap` is the newest one.
 - `session(id, {limit})` → one session plus `recaps` (all, oldest first) and `prompts` (the newest `limit`, oldest first). `id` is any unique id prefix (listings show 13 characters) or the session `.jsonl` path.
-- `prompts({project, limit})` → `[{text, at, project, session, uses}]`, newest first. `search(query, {project, limit})` keeps prompts containing every query word (case-insensitive substring).
+- `prompts({project, limit})` → `[{text, at, project, session, uses}]`, newest first. `search(query, {project, limit})` keeps prompts containing every whitespace-separated query word (case-insensitive substring); punctuation inside a word also matches other punctuation or a space (`git-commit` finds `git commit`), while its parts stay adjacent (`a/b` does not find `alpha and beta`).
 - `recaps({project, limit})` → `[{text, at, session, project}]`, newest first.
 - Python uses the same names with keyword options: `await archive.sessions(project="*", limit=50)`.
 - Prompt history holds prompts typed into the interactive editor, one row per unique prompt tagged with its latest submission's project and session; subagent tasks and SDK/RPC prompts are absent.
 - Recaps are short summaries written when an interactive session goes idle, and many sessions have none.
-- For a full transcript, `read` the session `file` (raw JSONL).
+- For a full transcript, `read` the session `file` (raw JSONL) for transcript checks.
 
 ## Examples
 

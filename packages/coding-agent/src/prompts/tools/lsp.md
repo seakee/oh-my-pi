@@ -18,5 +18,5 @@ The whole call defaults to {{defaultTimeoutSec}}s, and project-aware diagnostics
 ## Rules
 
 - Symbol-aware work (rename, references, definition, code actions) must use `lsp` whenever a server is available, because it follows shadowing, re-exports, and cross-file usages that text tools miss.
-- Never do a cross-file rename with `ast_edit`, `sed`, or hand edits when `lsp` `rename`/`rename_file` can: text renames silently drop callsites.
+- Never do a cross-file rename with `syntax_rewrite`, `sed`, or hand edits when `lsp` `rename`/`rename_file` can: text renames silently drop callsites.
 - Reach for `code_actions` on imports, quick fixes, and server-known refactors before editing by hand.

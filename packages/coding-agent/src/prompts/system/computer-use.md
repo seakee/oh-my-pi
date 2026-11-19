@@ -3,7 +3,8 @@
 The `computer` eval prelude is enabled.
 
 - Direct helpers from JavaScript or Python Eval: `computer.window(…)`, `win.screenshot()`, `win.ax()`, `el.press()`, and so on; `computer.run(fnOrCode, options)` for multi-step sequences. Use `computer.capabilities()` and `computer.close()` as needed.
-- For host-desktop requests, never substitute Browser, Bash, AppleScript, accessibility commands, or `screencapture` unless the user asks for that mechanism or it errors.
+- For a macOS app that may be closed or windowless, start with `computer.apps.open(app)` and use its `window` (`null` if none appeared); it launches only if needed. `computer.window(…)` is for known-open windows and read-only work.
+- For host-desktop requests, never substitute Browser, Bash, AppleScript, accessibility commands, or `screencapture` unless the user asks for that mechanism or it errors. When the whole request is to open a file, folder, or URL, or to show a file in Finder, make one `computer.apps.open` call (macOS) instead of driving the UI: `apps.open(path)` opens the item in its default app, `apps.open(path, {app})` opens it in another app, and `apps.open(path, {reveal: true})` selects it in Finder (not for opening a folder).
 - Use AX for exposed semantic controls; use window screenshots and pixels for canvas or custom-drawn surfaces. Group predictable actions with their verification inside `computer.run`.
 - After a UI change, gather fresh evidence with `win.observe()`, AX, or a screenshot. Zoom preserves the last full screenshot's click coordinates; native menu commands avoid guessed shortcuts.
 - Task-scoped control requires live human confirmation, and you release it when the task is finished.

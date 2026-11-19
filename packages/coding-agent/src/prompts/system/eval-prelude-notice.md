@@ -1,9 +1,9 @@
 <system-notice id="prelude-extension">
-The `eval` prelude globals have changed. Only the changes appear below; any prelude not named here is unaffected.
+The `execute_code` prelude globals have changed. Only the changes appear below; any prelude not named here is unaffected.
 {{#if added.length}}
-Now available in the JavaScript and Python `eval`{{#if canRead}}; read the linked docs before first use{{/if}}:
+Now available in JavaScript and Python `execute_code`{{#if canRead}}; read the linked docs before first use{{#if anyFirstCall}} unless marked{{/if}}{{/if}}:
 {{#each added}}
-- `{{name}}`{{#if summary}}: {{summary}}{{/if}}{{#if ../canRead}} → `xd://eval/{{name}}`{{/if}}
+- `{{name}}`{{#if summary}}: {{summary}}{{/if}}{{#if firstCall}} (no `read` needed first: the guide follows its first call's result){{/if}}{{#if ../canRead}} → `xd://eval/{{name}}`{{/if}}
 {{/each}}
 {{/if}}
 {{#if removed.length}}

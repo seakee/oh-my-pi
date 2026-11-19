@@ -48,7 +48,6 @@ You are running an autonomous experiment loop. Keep iterating until the user int
 ### Your notes (use `update_notes` to edit)
 
 {{notes}}
-
 {{/if}}
 {{#if has_recent_results}}
 ### Current segment snapshot

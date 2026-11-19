@@ -1,4 +1,4 @@
-Structural, AST-aware rewrites with ast-grep, for codemods where text replacement is unsafe. Mixed-language paths are fine: each file is parsed as its own language, and a pattern only rewrites the files it parses.
+Structural AST-aware code rewrites for codemods where text replacement is unsafe. Mixed-language paths are fine: each file is parsed as its own language, and a pattern only rewrites the files it parses.
 
 - Metavariables in `pat` (`$A`, `$$$ARGS`) substitute into `out`.
 - Patterns match AST structure, not text. `$NAME` is one node, `$_` binds nothing, and `$$$NAME` is zero or more nodes.
@@ -7,5 +7,5 @@ Structural, AST-aware rewrites with ast-grep, for codemods where text replacemen
 - A rewrite pattern must parse as a single AST node. Wrap one that is not standalone: `class $_ { … }`.
 - TypeScript annotations are tolerated: `async function $NAME($$$ARGS): $_ { $$$BODY }`. Delete a construct by leaving `out` empty: `{"pat":"console.log($$$)","out":""}`.
 - Substitution is one to one: captures are never split or merged.
-- Matches are staged as a proposal rather than applied. Finalize by writing a one-sentence reason to `xd://resolve` to apply, or to `xd://reject` to discard.
+- Matches are staged as a preview proposal rather than applied immediately; follow the returned preview instructions to apply or discard them.
 - A parse issue produces a malformed rewrite, not a clean no-op. For one-off text edits, prefer the edit tool.

@@ -26,7 +26,7 @@ The objective is ready only once all five fields are pinned down; probe any miss
 
 Ask again until each of these is fixed: a vague "done" with no checkable signal, uncapped iteration ("until CI is green", "keep going until it works"), and self-graded success with no verification command.
 
-Once all five are settled, call `goal` with `op: "create"`, the final objective, and `token_budget` if the user gave one. The objective must use exactly this ordered markdown structure:
+Once all five are settled, call `manage_goal` with `op: "create"`, the final objective, and `token_budget` if the user gave one. The objective must use exactly this ordered markdown structure:
 
 ## Objective
 ## Success criteria
@@ -34,4 +34,4 @@ Once all five are settled, call `goal` with `op: "create"`, the final objective,
 ## Boundaries
 ## Stop conditions
 
-Creation enables goal mode immediately: confirm it in one short sentence, then work toward the objective. If the user declines or abandons the interview, do not call `goal`.
+Creation enables goal mode immediately: confirm it in one short sentence, then work toward the objective. If the user declines or abandons the interview, do not call `manage_goal`.

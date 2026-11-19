@@ -4,7 +4,7 @@ Finish with exactly one JSON object matching the schema below, with no prose and
 
 # Checker Discovery
 
-The user asked `omp cleanse` to detect and repair: **{{request}}**
+The user asked the cleanse workflow to detect and repair: **{{request}}**
 
 Identify the project commands that surface exactly these diagnostics, so the orchestrator can run them, parse the output, and dispatch repair agents.
 

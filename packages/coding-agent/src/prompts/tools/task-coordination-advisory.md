@@ -1,1 +1,1 @@
-Coordination: {{count}} siblings are running at the same time. If their work overlaps, have them message each other at `write agent://<id>` (`agent://all` broadcasts) before editing shared files. `read proc://` lists running jobs and agents.
+{{count}} siblings are running concurrently. For overlapping files, assign each file a single owner via `write agent://<id>`; siblings should message only to unblock work, not to announce routine edits. `read proc://` lists running jobs and agents.

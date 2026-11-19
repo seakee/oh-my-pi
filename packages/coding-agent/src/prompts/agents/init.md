@@ -4,7 +4,7 @@ description: Generate AGENTS.md for current codebase
 thinking-level: medium
 ---
 
-Research the codebase with parallel `task` agents — one each for core source, tests, configuration and build, and scripts and docs — then synthesize their findings into a single AGENTS.md.
+Research the codebase with parallel `delegate_task` subagents — one each for core source, tests, configuration and build, and scripts and docs — then synthesize their findings into a single AGENTS.md.
 
 Cover these areas:
 - **Project Overview**: what the project is for.

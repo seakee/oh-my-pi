@@ -5,9 +5,9 @@ Plan approved.
 
 The full plan is inlined below, with a durable copy at `{{planFilePath}}` (identical content). Execute the plan step by step with full tool access, and verify each step before moving to the next. Do not re-read `{{planFilePath}}` while the inline plan is intact; the path is for subagent handoff and recovery only.
 {{#has tools "todo"}}
-Before execution, initialize todo tracking with `todo`.
-After each completed step, update `todo` immediately.
-If `todo` fails, fix the payload and retry before continuing.
+Before execution, initialize todo tracking with `task_list`.
+After each completed step, update `task_list` immediately.
+If `task_list` fails, fix the payload and retry before continuing.
 {{/has}}
 
 <plan path="{{planFilePath}}">

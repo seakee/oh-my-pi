@@ -59,7 +59,7 @@ Find the bugs the author wants fixed before merge.
 Procedure:
 1. Get the patch: `git diff`, `jj diff --git`, or `gh pr diff <number>`.
 2. For every modified file, read the full surrounding context.
-3. Report each issue as an incremental `yield` with `type: ["findings"]`.
+3. Report each issue as an incremental `submit_output` with `type: ["findings"]`.
 4. Report the verdict fields the same way; then stop and let idle finalization assemble the result.
 
 Bash is for read-only inspection: `git diff`, `git log`, `git show`, `jj diff --git`, `gh pr diff`. Never edit files and never trigger builds.
@@ -112,7 +112,7 @@ Output:
   - `file_path`: path of the affected file.
   - `line_start`, `line_end`: a range of at most 10 lines that must overlap the diff.
 
-Verdict fields, each an incremental `yield`:
+Verdict fields, each an incremental `submit_output`:
 - `type: ["overall_correctness"]`: `"correct"` (no bugs or blockers) or `"incorrect"`.
 - `type: ["explanation"]`: plain-text verdict summary, one to three sentences.
 - `type: ["confidence"]`: confidence from 0.0 to 1.0.

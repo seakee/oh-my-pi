@@ -1,2 +1,2 @@
-Prefer `edit` for existing files; use `write` for new files or whole-file replacement. Never create documentation files or add emoji unless asked.
-`archive.ext:member` addresses ZIP/tar families and `.asar`, which are writable; other archive formats are read-only. `db.sqlite:table` inserts a row; `db.sqlite:table:key` applies a JSON update, and empty content deletes the row.
+Prefer `edit` for existing files; use `write` for required new files or whole-file replacement. Do not create documentation files or add emoji unless requested.
+{{#if readActive}}Archive members and SQLite rows are writable too: `xd://read/sources`.{{else}}`archive.ext:member`: ZIP/tar families and `.asar` are writable, others are read-only. `db.sqlite:table` inserts a row; `db.sqlite:table:key` applies a JSON update, and empty content deletes the row.{{/if}}

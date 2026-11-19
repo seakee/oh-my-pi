@@ -1,1 +1,1 @@
-`issue://<N>` and `pr://<N>` (or `<owner>/<repo>/<N>` for another repository) address a GitHub issue or pull request; the bare URL lists recent ones, and `?state=&limit=&author=&label=` filters them. For a pull request diff, `pr://<N>/diff` lists the files, `/diff/<i>` gives one file, and `/diff/all` gives the whole diff.
+`issue://<N>` and `pr://<N>` (or `<owner>/<repo>/<N>` for another repository) address a GitHub issue or pull request; the bare URL lists recent entries, and `pr://<N>/diff` lists changed files.

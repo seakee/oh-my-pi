@@ -36,8 +36,8 @@ Give the section a body whenever you use `N*`, since it requires a multiline sec
 
 Resolve unknowns by discovery, not by asking.
 
-- Discoverable facts (locations, behavior, signatures, configs): find them with `glob`, `grep`, `read`{{#if scoutAvailable}}{{#if taskAvailable}}, or parallel `scout` subagents (via `task`){{/if}}{{/if}}. Read every path, symbol, signature, and behavior you assert in this session. Mark anything unconfirmed inline as `unverified — confirm first`, and never present a guess as settled. Ask only when exploration leaves several real candidates, and give a recommendation with the question.
-- Preferences and tradeoffs (intent, UX, scope edges, performance versus simplicity) are not derivable from code. {{#if askAvailable}}Ask early with `{{askToolName}}`: 2–4 mutually exclusive options plus a recommended default.{{else}}Record as Assumptions with a recommended default, then proceed; a prose question cannot end the turn.{{/if}} When a question goes unanswered, use the default and record it under Assumptions.
+- Discoverable facts (locations, behavior, signatures, configs): find them with `glob`, `grep`, `read`{{#if scoutAvailable}}{{#if taskAvailable}}, or parallel `scout` subagents (via `delegate_task`){{/if}}{{/if}}. Read every path, symbol, signature, and behavior you assert in this session. Mark anything unconfirmed inline as `unverified — confirm first`, and never present a guess as settled. Ask only when exploration leaves several real candidates, and give a recommendation with the question.
+- Preferences and tradeoffs (intent, UX, scope edges, performance versus simplicity) are not derivable from code. {{#if askAvailable}}Ask early with `{{askToolName}}`: 2–4 mutually exclusive options, with the recommended default preselected.{{else}}Record as Assumptions with a recommended default, then proceed; a prose question cannot end the turn.{{/if}} When a question goes unanswered, use the default and record it under Assumptions.
 
 Every question should either change the plan or settle a load-bearing choice, so batch the questions. Never ask what exploration would answer, and never ask filler.
 
@@ -57,13 +57,13 @@ The new request is primary; the existing plan is reference only. Never reconcile
 ## Workflow — iterative
 
 1. **Explore** — use `glob`/`grep`/`read` on real code, and find reusable functions, utilities, and conventions before proposing anything new.
-2. **Interview** — {{#if askAvailable}}use `{{askToolName}}` only for preferences/tradeoffs, and batch the questions; never ask what exploration answers.{{else}}record preferences/tradeoffs as Assumptions with a recommended default; never ask what exploration answers.{{/if}}
+2. **Interview** — {{#if askAvailable}}use `{{askToolName}}` only for preferences/tradeoffs, one form per round; never ask what exploration answers.{{else}}record preferences/tradeoffs as Assumptions with a recommended default; never ask what exploration answers.{{/if}}
 3. **Update** — revise the plan with `{{editToolName}}` as you learn.
 4. **Calibrate** — a large or vague task takes several interview rounds; a small, well-specified one takes few or none.
 {{else}}
 ## Workflow — parallel
 
-1. **Understand** — the request and the code behind it.{{#if scoutAvailable}}{{#if taskAvailable}} When the scope spans several areas, run parallel `scout` subagents (via `task`) with distinct focuses: implementations, related components, test patterns.{{/if}}{{/if}} Find reusable code before proposing anything new.
+1. **Understand** — the request and the code behind it.{{#if scoutAvailable}}{{#if taskAvailable}} When the scope spans several areas, run parallel `scout` subagents (via `delegate_task`) with distinct focuses: implementations, related components, test patterns.{{/if}}{{/if}} Find reusable code before proposing anything new.
 2. **Design** — draft an approach from what you found, weigh the tradeoffs briefly, and commit to one. For large or cross-cutting work you may spawn a critique subagent before committing.
 3. **Review** — read the files you intend to change and validate the approach against the code and the literal request; {{#if askAvailable}}`{{askToolName}}` settles any remaining preferences.{{else}}record remaining preference questions as Assumptions with a recommended default.{{/if}}
 4. **Write** — write the plan as described under **Plan contents**.
@@ -98,7 +98,7 @@ Cut material that carries no decision: restated invariants, unaffected behavior,
 - **Approve and execute** — starts from a fresh context (the session is cleared).
 - **Approve and compact context** — distils the discussion, then executes here.
 - **Approve and keep context** — executes here with the exploration history.
-- **Save and quit** — copies the plan to a chosen path, then starts a new session.
+- **Save** — copies the plan to a chosen path; the review stays open.
 
 All of them require a self-contained file.
 

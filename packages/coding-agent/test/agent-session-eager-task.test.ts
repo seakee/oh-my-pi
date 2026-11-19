@@ -194,7 +194,7 @@ describe("AgentSession eager task prelude", () => {
 		expect(observedCalls).toHaveLength(1);
 		expect(observedCalls[0]?.toolChoice).toBeUndefined();
 		expect(observedCalls[0]?.messageRoles).toEqual(["developer", "user"]);
-		expect(observedCalls[0]?.messageTexts[0]).toContain("`task`");
+		expect(observedCalls[0]?.messageTexts[0]).toContain("`delegate_task`");
 		expect(
 			observedCalls[0]?.messageTexts.filter(text => text.includes("refactor the parser across modules")),
 		).toHaveLength(1);
@@ -290,13 +290,13 @@ describe("AgentSession eager task prelude", () => {
 
 		expect(observedCalls).toHaveLength(1);
 		// eager-todo still forces the todo tool choice on the first turn
-		expect(observedCalls[0]?.toolChoice).toBe("todo");
+		expect(observedCalls[0]?.toolChoice).toBe("task_list");
 		// both hidden preludes precede the user message: todo first, then task
 		expect(observedCalls[0]?.messageRoles).toEqual(["developer", "developer", "user"]);
 		const texts = observedCalls[0]?.messageTexts ?? [];
 		expect(texts.at(-1)).toBe("refactor the parser across modules");
 		// the task reminder is the second prelude (after the todo reminder)
-		expect(texts.findIndex(text => text.includes("`task`"))).toBe(1);
+		expect(texts.findIndex(text => text.includes("`delegate_task`"))).toBe(1);
 	});
 
 	it("renders the task tool's wire name in the eager reminder", async () => {

@@ -10,4 +10,4 @@ Working rules:
 - Prefer editing existing files over creating new ones.
 - Never create documentation files (`*.md`) unless the request explicitly asks for one.
 - Follow the assignment and its instructions.
-- When delegating with `task`, pick the most specific `agent` type per spawn, and use a general-purpose worker only when no listed specialist fits.
+- When delegating with `delegate_task`, pick the most specific `agent` type per spawn, and use a general-purpose worker only when no listed specialist fits.

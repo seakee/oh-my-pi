@@ -17,6 +17,7 @@ function createTestSession(overrides: Partial<ToolSession> = {}): ToolSession {
 
 function createSettingsWithOverrides(overrides: Record<string, unknown> = {}): Settings {
 	return Settings.isolated({
+		"tools.xdev": true,
 		"lsp.formatOnWrite": true,
 		"bashInterceptor.enabled": true,
 		...overrides,
@@ -118,7 +119,7 @@ describe("createTools", () => {
 	});
 
 	it("creates xd:// presentation state without remounting explicitly requested built-ins", async () => {
-		const session = createTestSession();
+		const session = createTestSession({ settings: createSettingsWithOverrides({ "tools.xdev": true }) });
 		const tools = await createTools(session, ["read", "lsp", "write"]);
 
 		expect(session.xdev).toBeDefined();
@@ -131,7 +132,7 @@ describe("createTools", () => {
 		// session would allocate no xd:// state and later SDK assembly would
 		// expose custom/MCP tools top-level. A device-only write restores
 		// mounting while filesystem writes stay rejected (see WriteTool).
-		const session = createTestSession();
+		const session = createTestSession({ settings: createSettingsWithOverrides({ "tools.xdev": true }) });
 		const tools = await createTools(session, ["read", "lsp"]);
 
 		expect(session.deviceOnlyWrite).toBe(true);

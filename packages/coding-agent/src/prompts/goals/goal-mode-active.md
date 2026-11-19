@@ -11,13 +11,13 @@ Budget:
 - Tokens remaining: {{remainingTokens}}
 - Time used: {{timeUsedSeconds}} seconds
 
-`goal` tool:
-- `goal({op:"get"})`: the current goal and budget state.
-- `goal({op:"complete"})`: verified completion only.
+`manage_goal` tool:
+- `manage_goal({op:"get"})`: the current goal and budget state.
+- `manage_goal({op:"complete"})`: verified completion only.
 
 Keep the full objective intact across turns. Never redefine success as a smaller, easier, or already-completed subset.
 
-Before calling `goal({op:"complete"})`, audit the current repository state against every concrete deliverable: read the files, run the relevant checks, and match verification scope to claim scope. If any deliverable lacks direct current-state evidence, keep working.
+Before calling `manage_goal({op:"complete"})`, audit the current repository state against every concrete deliverable: read the files, run the relevant checks, and match verification scope to claim scope. If any deliverable lacks direct current-state evidence, keep working.
 
 An exhausted budget is not completion. If work is unfinished, leave the goal active.
 </goal_context>

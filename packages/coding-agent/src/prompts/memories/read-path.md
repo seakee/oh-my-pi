@@ -1,11 +1,14 @@
 # Memory Guidance
 Root: memory://root
-1. Read `memory://root/memory_summary.md` first.
-2. If you need more, inspect `memory://root/MEMORY.md` and `memory://root/skills/<name>/SKILL.md`.
-3. Memory holds heuristics and process context. Current repository files, runtime output, and user instructions carry the factual state and the final decisions.
-4. When memory changes a plan, cite the artifact path (for example `memory://root/skills/<name>/SKILL.md`) and the current-repo evidence behind it.
-5. Memory that disagrees with the repository state or with a user instruction is stale: correct the behavior first, then update or regenerate the memory artifacts.
-6. State confidence only after verifying against the repository; memory alone is never sufficient proof.
+Rules:
+{{#if memory_summary}}
+- Read `memory://root/memory_summary.md` first.
+- If you need more, inspect `memory://root/MEMORY.md` and `memory://root/skills/<name>/SKILL.md`.
+{{/if}}
+- Memory holds heuristics and process context. Current repository files, runtime output, and user instructions carry the factual state and final decisions.
+- When memory changes a plan, cite the artifact path (for example `memory://root/skills/<name>/SKILL.md`) and the current-repo evidence behind it.
+- Memory that disagrees with the repository state or with a user instruction is stale: correct the behavior first, then update or regenerate the memory artifacts.
+- State confidence only after verifying against the repository; memory alone is never sufficient proof.
 {{#if memory_summary}}
 Memory summary:
 {{memory_summary}}

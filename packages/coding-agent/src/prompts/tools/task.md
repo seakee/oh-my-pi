@@ -1,40 +1,97 @@
-{{#if asyncEnabled}}{{#if batchEnabled}}Start the supplied `tasks[]` concurrently and return their identifiers without waiting for completion.{{else}}Start the assigned agent and return its identifier without waiting for completion.{{/if}}{{#if hasBlockingAgents}} An agent configured for blocking execution instead returns its result in this call.{{/if}}{{else}}{{#if batchEnabled}}Execute the supplied `tasks[]` and return when they complete.{{else}}Execute the assigned agent and return when it completes.{{/if}}{{/if}}
-{{#if asyncEnabled}}{{#ifAny structured hasStructuredAgents}}
+{{#if asyncEnabled}}
+{{#if batchEnabled}}
+Start `subtasks[]` concurrently and return their IDs immediately.
+{{else}}
+Start one agent and return its ID immediately.
+{{/if}}
+{{#if hasBlockingAgents}}
+Blocking agents return inline.
+{{/if}}
+{{else}}
+{{#if batchEnabled}}
+Run `subtasks[]` synchronously.
+{{else}}
+Run one agent synchronously.
+{{/if}}
+{{/if}}
+{{#if asyncEnabled}}
+{{#ifAny structured hasStructuredAgents}}
 
-## Receiving results
-{{#if structured}}Results requested with `outputSchema`{{else}}Results from agents configured for structured output{{/if}} include the parsed payload even when validation fails. Read it through `agent://<id>` and append a field selector such as `/<field>` or `/reports/0/data` for nested data. Invalid output also has an inline preview.
+## Results
+{{#if structured}}`outputSchema`{{else}}Structured agents'{{/if}} parsed payload (even when invalid) is readable at `agent://<id>` (field `/<field>`, nested `/reports/0/data`), with an inline preview when invalid.
 {{/ifAny}}
 
 {{asyncGuidance}}
 {{/if}}
 
-## Assigning responsibility
-
-Choose the specialist whose capabilities fit the assignment.{{#if scoutAvailable}} Use `scout` for read-only discovery when the relevant files are not known.{{/if}} Keep investigation and implementation with the same agent when practical. To use the default agent (`{{defaultAgent}}`), leave out the `agent` property rather than naming that default explicitly.
-{{#if batchEnabled}}Place each specialist's `agent` selection inside its corresponding `tasks[]` item; the batch itself has no top-level `agent` selection.
+## Inputs
+- `agent`: choose the most specific agent{{#if batchEnabled}}, placed inside each `subtasks[]` item rather than at the top level{{/if}}.
+  - Omit `agent` only for the default (`{{defaultAgent}}`); do not specify that default explicitly.
+{{#if scoutAvailable}}
+  - Use `scout` for read-only research only when the relevant files are unknown.
 {{/if}}
-For overlapping changes, designate one integration owner{{#if ircEnabled}} and coordinate dependencies through `write agent://<id>`{{/if}}. Define the shared interfaces in {{#if batchEnabled}}`context`{{else}}the assignment{{/if}}. Agents should not run builds, tests, linters or formatters during implementation; the integration owner performs those checks together after the work has landed.
+  - Prefer one agent to both investigate and edit.
+{{#if batchEnabled}}
+- `shared_context`: shared background (`# Goal`, `# Contract` interfaces); do not repeat it per item.
+{{/if}}
+{{#if steps}}
+- `steps`: ordered stages for one agent, sent one at a time after the prior stage finishes. Earlier stage reports arrive as progress messages; the last stage's result is returned.
+  - The first step carries `# Target` files and non-goals{{#if batchEnabled}} beyond `shared_context`{{/if}}.
+  - Each step covers one `# Change` stage.
+  - The last step adds `# Acceptance` observable results.
+  - Child agents start without this conversation;{{#if ircEnabled}} parent IRC steers immediately;{{/if}} pass large payloads via `local://<path>` rather than inline.
+  - Independent work belongs in separate subtasks.
+{{else}}
+- `task`: self-contained assignment (`# Target` files and non-goals, `# Change` steps/APIs, `# Acceptance` observable results).
+  - Child agents start without this conversation;{{#if ircEnabled}} parent IRC steers immediately;{{/if}} pass large payloads via `local://<path>` rather than inline.
+{{/if}}
+- `name`: CamelCase identifier up to 32 characters, auto-generated if omitted; address the agent by name.{{#if structured}} `outputSchema` overrides agent and session schemas.{{/if}}
+- `scope`: describe how open-ended the child's problem is—whether the fix or design is already decided, or which causes or designs remain open.
+  - Volume of work does not widen it; do not mention sibling agents or coordination.
+  - Examples: `one fix: rename, names given`; `one fix: slice end in paginate`; `single-flight cache load; races easy to miss`; `several retry API shapes; error classes to choose`; `deadlock cause open, no repro`.
+{{#if evalToolsEnabled}}
+- `tools`: code-defined tools that execute in your runtime.
+{{/if}}
+{{#if effortEnabled}}
+- `effort`: `"lo"`, `"med"`, or `"hi"` matching how open-ended the problem is.
+{{/if}}
+{{#if perCallModelEnabled}}
+- `model`: one exact `provider/model-id[@upstream][:level]` string for this spawn only{{#if batchEnabled}}, set per `subtasks[]` item{{/if}}.
+  - `@upstream` pins an aggregator route and is part of the model identity.
+  - Only operator-approved models are allowed; no roles, arrays, globs, or partial IDs.
+  - Approved models:
+{{#each perCallModelAdvertisement.roles}}
+    - {{#list patterns join=", "}}`{{this}}`{{/list}} ({{role}})
+{{/each}}
+{{#unless perCallModelAdvertisement.parentModelWithheld}}
+    - your own current model
+{{/unless}}
+    - the selected bundled or user agent's own configured model
+  - A listed glob approves matching exact IDs; write the exact ID rather than the glob.
+{{#if perCallModelAdvertisement.allowlist.length}}
+  - Allowlist: {{#list perCallModelAdvertisement.allowlist join=", "}}`{{this}}`{{/list}} (must also be approved).
+{{/if}}
+  - An agent's `task.agentModelOverrides` entry or user-chosen effort conflicts with `model`.
+  - Omit `model` unless needed.
+  - If a requested model is unavailable, stop and report rather than substituting another.
+  - Every request requires an approved model; retry fallback, context promotion, and prewalk are off.
+{{/if}}
+{{#if structured}}
+- `schema_validation`: default `permissive` warns after retries; `strict` fails.
+{{/if}}
+{{#if isolationEnabled}}
+{{#if applyIsolatedChanges}}
+- `isolated`: worktree execution whose successful changes apply to the parent.
+{{else}}
+- `isolated`: worktree execution whose changes are retained without being applied to the parent.
+{{/if}}
+{{/if}}
 
-## Describing an assignment
+Shared edits require one integration owner; give each task its files{{#unless batchEnabled}} and interfaces{{/unless}}.
+Subagents should skip builds, linters, tests, and formatters mid-flight so they can be run once afterward.
 
-Use `name` as a CamelCase identifier of at most 32 characters. A name is generated if omitted; use the assigned name to address the agent.{{#if structured}} An explicit `outputSchema` takes precedence over schemas configured on the agent or session.{{/if}}
-
-Use `solutionSpace` to explain the decisions that remain open, not the amount of work. Say whether the correction is already determined, whether subtle races remain, or which API alternatives need a decision. For example: `one fix: rename, names given`; `one fix: slice end in paginate`; `single-flight cache load; races easy to miss`; `several retry API shapes; error classes to choose`; `deadlock cause open, no repro`. Do not discuss sibling agents or coordination in this field.
-{{#if seanceGuidance}}{{seanceGuidance}}{{/if}}
-{{#if evalToolsEnabled}}The `tools` field supplies eval-defined tools that execute in your kernel.
-{{/if}}{{#if effortEnabled}}Select `effort` as `"lo"`, `"med"` or `"hi"` to match the unresolved decision space.
-{{/if}}{{#if structured}}With `schemaMode`, the default permissive behavior warns after validation retries, while strict mode fails.
-{{/if}}{{#if isolationEnabled}}{{#if applyIsolatedChanges}}Set `isolated` for a worktree execution whose successful changes are applied to the parent.
-{{else}}Set `isolated` for a worktree execution whose changes are retained without applying them to the parent.
-{{/if}}{{/if}}
-
-An agent starts without this conversation.{{#if ircEnabled}} The parent can send immediate steering through IRC.{{/if}} Put large shared inputs in a `local://<path>` resource and reference it instead of embedding them in the assignment.
-
-{{#if batchEnabled}}Use `context` for information shared across the batch, such as a `# Goal` and the common `# Contract`; do not duplicate it in every task.
-{{/if}}Make each `task` self-contained: identify its `# Target` files and exclusions, the required `# Change` and interfaces, and observable `# Acceptance` criteria.
-
-## Agent choices
-{{#if spawningDisabled}}New agent execution is currently unavailable.
-{{else}}{{#if hasModelMentions}}An `m<N>` selector denotes a model explicitly tagged by the user (`<model agent="m<N>" name="…"/>`), not a specialist. Use it only when the user names that model.
-{{/if}}{{#list agents join=""}}- `{{name}}`{{#if readOnly}} (read-only; investigation only, no edits){{/if}}{{#if blocking}} (blocking; inline result){{/if}}{{#if structured}} (structured; schema result){{/if}}: {{description}}
+## Available agents
+{{#if spawningDisabled}}Agent spawning is currently disabled.
+{{else}}{{#if hasModelMentions}}`m<N>` refers to a user-tagged model (`<model agent="m<N>" name="…"/>`), not a specialist; spawn it only when the user names it.
+{{/if}}{{#list agents join=""}}- `{{name}}`{{#if readOnly}} (read-only, no edits){{/if}}{{#if blocking}} (blocking; inline result){{/if}}{{#if structured}} (structured; schema result){{/if}}: {{description}}
 {{/list}}{{/if}}

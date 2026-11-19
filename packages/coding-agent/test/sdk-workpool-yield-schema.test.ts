@@ -19,7 +19,7 @@ async function expectProviderYieldContract(
 ): Promise<void> {
 	const providerContext = await session.agent.buildSideRequestContext([]);
 	if (dialect === "native") {
-		const providerTool = providerContext.tools?.find(candidate => candidate.name === "yield");
+		const providerTool = providerContext.tools?.find(candidate => candidate.name === "submit_output");
 		if (!providerTool) throw new Error("Missing provider yield tool");
 		const properties = Reflect.get(providerTool.parameters, "properties");
 		if (pooled) {
@@ -36,8 +36,8 @@ async function expectProviderYieldContract(
 	const providerSystemPrompt = providerContext.systemPrompt;
 	if (!providerSystemPrompt) throw new Error("Missing provider system prompt");
 	const providerPrompt = providerSystemPrompt.join("\n");
-	expect(providerPrompt.match(/type yield =/g)).toHaveLength(1);
-	const yieldStart = providerPrompt.indexOf("type yield =");
+	expect(providerPrompt.match(/type submit_output =/g)).toHaveLength(1);
+	const yieldStart = providerPrompt.indexOf("type submit_output =");
 	const nextType = providerPrompt.indexOf("\ntype ", yieldStart + 1);
 	const namespaceEnd = providerPrompt.indexOf("\n\n} // namespace functions", yieldStart + 1);
 	let yieldEnd = nextType;
@@ -370,9 +370,9 @@ describe("SDK workpool yield schema", () => {
 			const promptText = () => session.agent.state.systemPrompt.join("\n");
 			await session.setWorkPoolYieldItems([{ id: "pool#1", index: 1 }]);
 			expect(promptText()).toContain("{ key: <1-based number>, data: <outcome> }");
-			expect(promptText()).not.toContain("Yield protocol:");
+			expect(promptText()).not.toContain("Output protocol:");
 			await session.setWorkPoolYieldItems([]);
-			expect(promptText()).toContain("Yield protocol:");
+			expect(promptText()).toContain("Output protocol:");
 			expect(promptText()).not.toContain("{ key: <1-based number>, data: <outcome> }");
 		});
 	}

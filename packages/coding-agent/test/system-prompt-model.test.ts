@@ -44,10 +44,10 @@ try {
 	// The date/cwd reminder is built per request in the startup local timezone;
 	// the system prompt no longer embeds the date (#7404).
 	const reminder = renderDateCwdReminder(formatLocalCalendarDate(), "/cwd");
-	if (!reminder.includes(\`Today: \${process.env.OMP_EXPECTED_DATE}\`)) {
+	if (!reminder.includes(process.env.OMP_EXPECTED_DATE!)) {
 		throw new Error(\`Reminder did not contain expected local date:\\n\${reminder}\`);
 	}
-	if (reminder.includes(\`Today: \${process.env.OMP_REJECTED_DATE}\`)) {
+	if (reminder.includes(process.env.OMP_REJECTED_DATE!)) {
 		throw new Error(\`Reminder contained rejected UTC date:\\n\${reminder}\`);
 	}
 } finally {
@@ -172,10 +172,10 @@ describe("AgentSession model-change prompt refresh", () => {
 
 	function pickModelsAcrossTaskPolicies(): [Model, Model] {
 		const all = modelRegistry.getAll();
-		const eager = all.find(model => resolveDelegationBias(model) === "eager");
+		const gated = all.find(model => resolveDelegationBias(model) === "gated");
 		const restrained = all.find(model => resolveDelegationBias(model) === "restrained");
-		if (!eager || !restrained) throw new Error("Expected eager and restrained delegation models");
-		return [eager, restrained];
+		if (!gated || !restrained) throw new Error("Expected gated and restrained delegation models");
+		return [gated, restrained];
 	}
 
 	function newSession(
