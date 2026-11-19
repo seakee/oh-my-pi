@@ -1311,7 +1311,7 @@ describe("Settings", () => {
 			const settings = await Settings.loadIsolated({ cwd: projectDir, agentDir });
 
 			expect(cfgRetryFallbackChains.get(settings)).toEqual({});
-			expect(cfgInlineToolDescriptors.get(settings)).toBe("auto");
+			expect(cfgInlineToolDescriptors.get(settings)).toBe("off");
 		});
 
 		it("invalidates cached resolved values after set, override, and clearOverride", () => {
@@ -1396,7 +1396,7 @@ describe("Settings", () => {
 		it("migrates legacy inlineToolDescriptors booleans to the on/off enum", () => {
 			expect(cfgInlineToolDescriptors.get(Settings.isolated({ inlineToolDescriptors: true }))).toBe("on");
 			expect(cfgInlineToolDescriptors.get(Settings.isolated({ inlineToolDescriptors: false }))).toBe("off");
-			expect(cfgInlineToolDescriptors.get(Settings.isolated())).toBe("auto");
+			expect(cfgInlineToolDescriptors.get(Settings.isolated())).toBe("off");
 		});
 	});
 

@@ -1,1 +1,1 @@
-To commit your changes, use the execute_code `commit` namespace (`d = await commit.draft()`, then `await d.commit("subject", ["- body"])`), not `git add`/`git commit`: it selects only the lines you and your subagents wrote and never touches other agents' staged or unstaged work.
+For commits, use the `commit` namespace in `execute_code` (`d = await commit.draft()`, then `await d.commit("subject", ["- body"])`) instead of shell VCS commands: it stages and commits only edits recorded by this session and its workers while leaving unrelated workspace changes intact.
